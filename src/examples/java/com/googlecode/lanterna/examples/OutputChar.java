@@ -5,8 +5,8 @@ import java.io.IOException;
 import com.googlecode.lanterna.TextCharacter;
 import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.screen.TerminalScreen;
-import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
+import com.googlecode.lanterna.terminal.ansi.UnixTerminal;
 
 
 /**
@@ -19,7 +19,7 @@ import com.googlecode.lanterna.terminal.Terminal;
 public class OutputChar {
 
 	public static void main(String[] args) throws IOException {
-		Terminal terminal = new DefaultTerminalFactory().createTerminal();
+		Terminal terminal = new UnixTerminal();
 		Screen screen = new TerminalScreen(terminal);
 
 		screen.startScreen();
