@@ -18,6 +18,7 @@
  */
 
 using Lanterna.Core;
+using Lanterna.Graphics;
 using Lanterna.Input;
 using Lanterna.Terminal;
 
@@ -34,7 +35,7 @@ public abstract class AbstractScreen : IScreen
     private ScreenBuffer _backBuffer;
     private ScreenBuffer _frontBuffer;
     private readonly TextCharacter _defaultCharacter;
-    private TabBehavior _tabBehavior;
+    private TabBehaviour _tabBehaviour;
     private TerminalSize _terminalSize;
     private TerminalSize? _latestResizeRequest;
     private bool _disposed;
@@ -58,7 +59,7 @@ public abstract class AbstractScreen : IScreen
         _backBuffer = new ScreenBuffer(initialSize, defaultCharacter);
         _defaultCharacter = defaultCharacter;
         _cursorPosition = new TerminalPosition(0, 0);
-        _tabBehavior = TabBehavior.AlignToColumn4;
+        _tabBehaviour = TabBehaviour.AlignToColumn4;
         _terminalSize = initialSize;
         _latestResizeRequest = null;
     }
@@ -91,14 +92,14 @@ public abstract class AbstractScreen : IScreen
         _cursorPosition = validatedPosition;
     }
 
-    public virtual void SetTabBehavior(TabBehavior tabBehavior)
+    public virtual void SetTabBehaviour(TabBehaviour tabBehaviour)
     {
-        _tabBehavior = tabBehavior;
+        _tabBehaviour = tabBehaviour;
     }
 
-    public virtual TabBehavior GetTabBehavior()
+    public virtual TabBehaviour GetTabBehaviour()
     {
-        return _tabBehavior;
+        return _tabBehaviour;
     }
 
     public virtual void SetCharacter(TerminalPosition position, TextCharacter screenCharacter)
@@ -106,7 +107,7 @@ public abstract class AbstractScreen : IScreen
         SetCharacter(position.Column, position.Row, screenCharacter);
     }
 
-    public virtual ITextGraphics NewTextGraphics()
+    public virtual Graphics.ITextGraphics NewTextGraphics()
     {
         return new ScreenTextGraphics(this);
     }
@@ -140,11 +141,11 @@ public abstract class AbstractScreen : IScreen
     /// <returns>String of spaces to replace the tab with</returns>
     private string ReplaceTab(string tab, int currentColumn)
     {
-        return _tabBehavior switch
+        return _tabBehaviour switch
         {
-            TabBehavior.ReplaceWithSpace => " ",
-            TabBehavior.AlignToColumn4 => new string(' ', 4 - (currentColumn % 4)),
-            TabBehavior.AlignToColumn8 => new string(' ', 8 - (currentColumn % 8)),
+            TabBehaviour.ConvertToSpace => " ",
+            TabBehaviour.AlignToColumn4 => new string(' ', 4 - (currentColumn % 4)),
+            TabBehaviour.AlignToColumn8 => new string(' ', 8 - (currentColumn % 8)),
             _ => " "
         };
     }

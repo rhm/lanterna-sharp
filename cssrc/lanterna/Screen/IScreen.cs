@@ -18,31 +18,12 @@
  */
 
 using Lanterna.Core;
+using Lanterna.Graphics;
 using Lanterna.Input;
 using Lanterna.Terminal;
 
 namespace Lanterna.Screen;
 
-/// <summary>
-/// Tab behavior enum for handling tab characters in screen output
-/// </summary>
-public enum TabBehavior
-{
-    /// <summary>
-    /// Tabs are replaced with a single space
-    /// </summary>
-    ReplaceWithSpace,
-    
-    /// <summary>
-    /// Tabs are aligned to column multiples of 4
-    /// </summary>
-    AlignToColumn4,
-    
-    /// <summary>
-    /// Tabs are aligned to column multiples of 8
-    /// </summary>
-    AlignToColumn8
-}
 
 /// <summary>
 /// Refresh type enum for screen refresh operations
@@ -120,6 +101,11 @@ public interface IScreen : IInputProvider, IDisposable
     /// </summary>
     /// <param name="position">TerminalPosition of the new position where the cursor should be placed after Refresh(), or if null, hides the cursor</param>
     void SetCursorPosition(TerminalPosition? position);
+    
+    /// <summary>
+    /// Convenience property for cursor position. Gets the cursor position via GetCursorPosition().
+    /// </summary>
+    TerminalPosition? CursorPosition => GetCursorPosition();
 
     /// <summary>
     /// Gets the behavior for what to do about tab characters. If a tab character is written to the Screen, it would
@@ -128,7 +114,7 @@ public interface IScreen : IInputProvider, IDisposable
     /// rules that are available.
     /// </summary>
     /// <returns>Tab behavior that is used currently</returns>
-    TabBehavior GetTabBehavior();
+    TabBehaviour GetTabBehaviour();
 
     /// <summary>
     /// Sets the behavior for what to do about tab characters. If a tab character is written to the Screen, it would
@@ -136,8 +122,8 @@ public interface IScreen : IInputProvider, IDisposable
     /// front-buffer is in. Because of this, we convert tabs to a determined number of spaces depending on different
     /// rules that are available.
     /// </summary>
-    /// <param name="tabBehavior">Tab behavior to use when converting a \t character to spaces</param>
-    void SetTabBehavior(TabBehavior tabBehavior);
+    /// <param name="tabBehaviour">Tab behavior to use when converting a \t character to spaces</param>
+    void SetTabBehaviour(TabBehaviour tabBehaviour);
 
     /// <summary>
     /// Returns the size of the screen. This call is not blocking but should return the size of the screen as it is
@@ -166,7 +152,7 @@ public interface IScreen : IInputProvider, IDisposable
     /// ITextGraphics will be affecting this screen. Remember to call Refresh() on the screen to see your changes.
     /// </summary>
     /// <returns>New ITextGraphics object targeting this Screen</returns>
-    ITextGraphics NewTextGraphics();
+    Graphics.ITextGraphics NewTextGraphics();
 
     /// <summary>
     /// Reads a character and its associated meta-data from the front-buffer and returns it encapsulated as a

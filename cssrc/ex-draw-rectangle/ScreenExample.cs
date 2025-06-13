@@ -182,7 +182,7 @@ public static class ScreenExample
 
     private static void DrawFrame(ScreenTextGraphics graphics, int frame, DateTime startTime)
     {
-        var size = graphics.GetSize();
+        var size = graphics.Size;
         var elapsed = DateTime.Now - startTime;
         
         // Draw border
@@ -190,10 +190,10 @@ public static class ScreenExample
         
         // Draw title
         graphics.ForegroundColor = new AnsiTextColor(AnsiColor.YellowBright);
-        graphics.EnableModifier(SGR.Bold);
+        graphics.EnableModifiers(SGR.Bold);
         string title = "Lanterna C# Screen Layer Demo";
         graphics.PutString((size.Columns - title.Length) / 2, 1, title);
-        graphics.DisableModifier(SGR.Bold);
+        graphics.DisableModifiers(SGR.Bold);
         
         // Draw info panel
         DrawInfoPanel(graphics, size, frame, elapsed);
@@ -358,7 +358,7 @@ public static class ScreenExample
 
     private static void TestColorChanges(ScreenTextGraphics graphics, Random random)
     {
-        var size = graphics.GetSize();
+        var size = graphics.Size;
         
         // Fill a random rectangle with random colors
         var colors = new ITextColor[]
@@ -382,7 +382,7 @@ public static class ScreenExample
         
         graphics.ForegroundColor = fg;
         graphics.BackgroundColor = bg;
-        graphics.FillRectangle(x, y, width, height, '█');
+        graphics.FillRectangle(new TerminalPosition(x, y), new TerminalSize(width, height), '█');
         
         // Reset colors
         graphics.ForegroundColor = new AnsiTextColor(AnsiColor.Default);
@@ -391,7 +391,7 @@ public static class ScreenExample
 
     private static void TestTextRendering(ScreenTextGraphics graphics)
     {
-        var size = graphics.GetSize();
+        var size = graphics.Size;
         
         // Test different text styles
         var testTexts = new[]
@@ -417,17 +417,17 @@ public static class ScreenExample
             {
                 // Clear the line first
                 graphics.ForegroundColor = new AnsiTextColor(AnsiColor.Default);
-                graphics.FillRectangle(1, y, size.Columns - 2, 1, ' ');
+                graphics.FillRectangle(new TerminalPosition(1, y), new TerminalSize(size.Columns - 2, 1), ' ');
                 
                 // Draw the text
                 graphics.ForegroundColor = new AnsiTextColor(AnsiColor.YellowBright);
                 if (i % 2 == 0)
-                    graphics.EnableModifier(SGR.Bold);
+                    graphics.EnableModifiers(SGR.Bold);
                 
                 graphics.PutString(x, y, text);
                 
                 if (i % 2 == 0)
-                    graphics.DisableModifier(SGR.Bold);
+                    graphics.DisableModifiers(SGR.Bold);
             }
         }
     }
@@ -435,20 +435,20 @@ public static class ScreenExample
     private static void DrawResizeNotification(ScreenTextGraphics graphics, TerminalSize newSize)
     {
         graphics.ForegroundColor = new AnsiTextColor(AnsiColor.RedBright);
-        graphics.EnableModifier(SGR.Bold);
+        graphics.EnableModifiers(SGR.Bold);
         
         string message = $"Terminal resized to {newSize.Columns}x{newSize.Rows}";
         graphics.PutString(2, 2, message);
         
-        graphics.DisableModifier(SGR.Bold);
+        graphics.DisableModifiers(SGR.Bold);
     }
 
     private static void ShowExitScreen(ScreenTextGraphics graphics)
     {
-        var size = graphics.GetSize();
+        var size = graphics.Size;
         
         graphics.ForegroundColor = new AnsiTextColor(AnsiColor.GreenBright);
-        graphics.EnableModifier(SGR.Bold);
+        graphics.EnableModifiers(SGR.Bold);
         
         string[] messages = 
         {
@@ -478,6 +478,6 @@ public static class ScreenExample
             }
         }
         
-        graphics.DisableModifier(SGR.Bold);
+        graphics.DisableModifiers(SGR.Bold);
     }
 }

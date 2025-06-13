@@ -60,6 +60,21 @@ public class KeyStroke : IEquatable<KeyStroke>
     /// Gets the time when the keystroke was recorded
     /// </summary>
     public DateTime EventTime { get; }
+    
+    /// <summary>
+    /// Alias for IsCtrlDown for compatibility
+    /// </summary>
+    public bool CtrlDown => IsCtrlDown;
+    
+    /// <summary>
+    /// Alias for IsAltDown for compatibility
+    /// </summary>
+    public bool AltDown => IsAltDown;
+    
+    /// <summary>
+    /// Alias for IsShiftDown for compatibility
+    /// </summary>
+    public bool ShiftDown => IsShiftDown;
 
     /// <summary>
     /// Constructs a KeyStroke based on a supplied keyType; character will be null and all modifier keys will be 
