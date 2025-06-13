@@ -38,6 +38,8 @@ public interface ITextGraphics
     ITextGraphics SetCharacter(TerminalPosition position, TextCharacter character);
     ITextGraphics SetCharacter(int column, int row, char character);
     ITextGraphics SetCharacter(int column, int row, TextCharacter character);
+    TextCharacter? GetCharacter(int column, int row);
+    TextCharacter? GetCharacter(TerminalPosition position);
     ITextGraphics PutString(int column, int row, string text);
     ITextGraphics PutString(TerminalPosition position, string text);
     ITextGraphics PutString(int column, int row, string text, SGR extraModifier, params SGR[] optionalExtraModifiers);

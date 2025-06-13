@@ -276,5 +276,16 @@ public abstract class AbstractTextGraphics : ITextGraphics
         return this;
     }
 
+    public virtual TextCharacter? GetCharacter(int column, int row)
+    {
+        return GetCharacter(new TerminalPosition(column, row));
+    }
+
+    public virtual TextCharacter? GetCharacter(TerminalPosition position)
+    {
+        // Stub implementation - subclasses should override this for full functionality
+        return null;
+    }
+
     public abstract ITextGraphics NewTextGraphics(TerminalPosition topLeftCorner, TerminalSize size);
 }

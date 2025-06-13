@@ -364,6 +364,16 @@ public class DefaultTextGUIGraphics : ITextGUIGraphics
     Graphics.ITextGraphics Graphics.ITextGraphics.PutCSIStyledString(TerminalPosition position, string text) => 
         PutCSIStyledString(position, text);
 
+    public TextCharacter? GetCharacter(int column, int row)
+    {
+        return _backend.GetCharacter(column, row);
+    }
+
+    public TextCharacter? GetCharacter(TerminalPosition position)
+    {
+        return _backend.GetCharacter(position);
+    }
+
     Graphics.ITextGraphics Graphics.ITextGraphics.SetStyleFrom(IStyleSet source) => 
         SetStyleFrom(source);
 
