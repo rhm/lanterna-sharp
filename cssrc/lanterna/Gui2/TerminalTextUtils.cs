@@ -70,4 +70,21 @@ public static class TerminalTextUtils
         // In more advanced scenarios, this would handle Unicode width calculations
         return text.Length;
     }
+    
+    public static int GetStringCharacterIndex(string text, int columnIndex)
+    {
+        if (string.IsNullOrEmpty(text) || columnIndex < 0)
+            return 0;
+            
+        // Simple implementation - in more advanced scenarios this would handle 
+        // double-width characters and combining characters
+        return Math.Min(columnIndex, text.Length - 1);
+    }
+    
+    public static bool IsCharDoubleWidth(char character)
+    {
+        // Simple implementation - returns false for now
+        // In more advanced scenarios, this would detect CJK and other double-width characters
+        return false;
+    }
 }

@@ -25,6 +25,7 @@ public static class Symbols
     public const char Block_Dense = '▓';
     public const char Block_Medium = '▒';
     public const char Block_Sparse = '░';
+    public const char Block_Middle = '▒';
     
     public const char Triangle_Up_Pointing_Black = '▲';
     public const char Triangle_Down_Pointing_Black = '▼';
