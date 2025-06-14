@@ -4,6 +4,8 @@ namespace Lanterna.Graphics;
 
 public class Theme
 {
+    public Gui2.IWindowDecorationRenderer? WindowDecorationRenderer { get; set; }
+
     public ThemeDefinition GetDefinition(Type componentType)
     {
         return new ThemeDefinition();
@@ -28,6 +30,11 @@ public class ThemeDefinition
     public char GetCharacter(string name, char defaultChar)
     {
         return defaultChar;
+    }
+
+    public bool GetBooleanProperty(string name, bool defaultValue)
+    {
+        return defaultValue;
     }
 
     public T GetRenderer<T>() where T : class
