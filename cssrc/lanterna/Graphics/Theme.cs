@@ -5,6 +5,7 @@ namespace Lanterna.Graphics;
 public class Theme
 {
     public Gui2.IWindowDecorationRenderer? WindowDecorationRenderer { get; set; }
+    public Gui2.IWindowPostRenderer? WindowPostRenderer { get; set; }
 
     public ThemeDefinition GetDefinition(Type componentType)
     {

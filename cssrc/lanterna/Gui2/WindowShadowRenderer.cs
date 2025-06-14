@@ -25,7 +25,7 @@ namespace Lanterna.Gui2;
 /// </summary>
 public class WindowShadowRenderer : IWindowPostRenderer
 {
-    public void PostRender(ITextGUIGraphics textGraphics, IWindow window)
+    public void PostRender(ITextGUIGraphics textGraphics, IWindowBasedTextGUI textGUI, IWindow window)
     {
         var windowPosition = window.Position;
         var decoratedWindowSize = window.DecoratedSize;

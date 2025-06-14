@@ -27,7 +27,7 @@ public abstract class AbstractTextGUI : ITextGUI
         _virtualScreenEnabled = true;
     }
 
-    protected KeyStroke? ReadKeyStroke()
+    protected virtual KeyStroke? ReadKeyStroke()
     {
         return _blockingIO ? _screen.ReadInput() : PollInput();
     }

@@ -39,7 +39,7 @@ public interface IWindow : IBasePane
 
     new IWindowBasedTextGUI? TextGUI { get; }
     
-    void SetTextGUI(IWindowBasedTextGUI textGUI);
+    void SetTextGUI(IWindowBasedTextGUI? textGUI);
     
     string Title { get; }
     
@@ -89,7 +89,7 @@ public interface IWindow : IBasePane
 
 public interface IWindowPostRenderer
 {
-    void PostRender(ITextGUIGraphics graphics, IWindow window);
+    void PostRender(ITextGUIGraphics graphics, IWindowBasedTextGUI textGUI, IWindow window);
 }
 
 public interface IWindowListener
