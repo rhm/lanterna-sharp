@@ -19,7 +19,7 @@ public abstract class AbstractBorder : AbstractComposite<IBorder>, IBorder
 
     public new IBorder.IBorderRenderer Renderer => (IBorder.IBorderRenderer)base.Renderer;
 
-    public new virtual IBorder SetSize(TerminalSize size)
+    public virtual IBorder SetSize(TerminalSize size)
     {
         Size = size;
         var component = GetComponent();
@@ -43,18 +43,16 @@ public abstract class AbstractBorder : AbstractComposite<IBorder>, IBorder
         }
     }
 
-    public virtual IBorder SetLayoutData(ILayoutData? layoutData)
+    public override IComponent SetLayoutData(ILayoutData? layoutData)
     {
         var component = GetComponent();
         if (component == null)
         {
-            // Note: Would need settable LayoutData property on base
-            // base.LayoutData = layoutData;
+            base.LayoutData = layoutData;
         }
         else
         {
-            // Note: Would need settable LayoutData property on component
-            // component.LayoutData = layoutData;
+            component.SetLayoutData(layoutData);
         }
         return this;
     }

@@ -201,7 +201,7 @@ public abstract class AbstractComponent<T> : IComponent where T : class, ICompon
         // No operation by default
     }
 
-    public IComponent SetLayoutData(ILayoutData? data)
+    public virtual IComponent SetLayoutData(ILayoutData? data)
     {
         lock (this)
         {
@@ -214,7 +214,21 @@ public abstract class AbstractComponent<T> : IComponent where T : class, ICompon
         }
     }
 
-    public virtual ILayoutData? LayoutData => _layoutData;
+    public virtual ILayoutData? LayoutData 
+    { 
+        get => _layoutData;
+        set 
+        {
+            lock (this)
+            {
+                if (_layoutData != value)
+                {
+                    _layoutData = value;
+                    Invalidate();
+                }
+            }
+        }
+    }
 
     public virtual IContainer? Parent => _parent;
 

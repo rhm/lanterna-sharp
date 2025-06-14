@@ -251,7 +251,7 @@ public abstract class AbstractWindow : AbstractBasePane<IWindow>, IWindow
         return position.WithRelative(-Position.Column, -Position.Row);
     }
 
-    public virtual void SetMenuBar(IMenuBar? menuBar)
+    public override void SetMenuBar(IMenuBar? menuBar)
     {
         lock (_lock)
         {
@@ -259,7 +259,7 @@ public abstract class AbstractWindow : AbstractBasePane<IWindow>, IWindow
         }
     }
 
-    public virtual IMenuBar? MenuBar { get; protected set; }
+    public override IMenuBar? MenuBar { get; protected set; }
 
     public override bool HandleInput(KeyStroke keyStroke)
     {

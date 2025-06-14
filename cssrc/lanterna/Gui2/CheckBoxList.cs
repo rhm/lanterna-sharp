@@ -362,19 +362,19 @@ public class CheckBoxList<V> : AbstractListBox<V, CheckBoxList<V>>
     /// <typeparam name="T">Type of items in the list</typeparam>
     public class CheckBoxListItemRenderer<T> : ListItemRenderer<T, CheckBoxList<T>>
     {
-        public int GetHotSpotPositionOnLine(int selectedIndex)
+        public override int GetHotSpotPositionOnLine(int selectedIndex)
         {
             return 1; // Position cursor on the checkbox marker
         }
 
-        public string GetLabel(CheckBoxList<T> listBox, int index, T item)
+        public override string GetLabel(CheckBoxList<T> listBox, int index, T item)
         {
             string check = listBox.IsChecked(index) ? "x" : " ";
             string text = item?.ToString() ?? "";
             return $"[{check}] {text}";
         }
 
-        public void DrawItem(ITextGUIGraphics graphics, CheckBoxList<T> listBox, int index, T item, 
+        public override void DrawItem(ITextGUIGraphics graphics, CheckBoxList<T> listBox, int index, T item, 
                             bool selected, bool focused)
         {
             if (graphics.Size.Rows == 0 || graphics.Size.Columns < 4)

@@ -80,10 +80,6 @@ public interface IWindow : IBasePane
     TerminalPosition FromGlobalToContentRelative(TerminalPosition position);
     
     TerminalPosition FromGlobalToDecoratedRelative(TerminalPosition position);
-    
-    void SetMenuBar(IMenuBar? menuBar);
-    
-    IMenuBar? MenuBar { get; }
 }
 
 
