@@ -121,7 +121,7 @@ public abstract class AbstractTextGUI : ITextGUI
         // Replace the field (this is not thread-safe, would need proper implementation)
     }
 
-    public bool BlockingIO
+    public virtual bool BlockingIO
     {
         get => _blockingIO;
         set => _blockingIO = value;

@@ -40,7 +40,7 @@ public abstract class AbstractComponent<T> : IComponent where T : class, ICompon
     {
         if (TextGUI?.GUIThread != null)
         {
-            TextGUI.GUIThread.InvokeAsync(action);
+            TextGUI.GUIThread.InvokeLater(action);
         }
         else
         {
