@@ -58,6 +58,11 @@ public abstract class AbstractInteractableComponent<T> : AbstractComponent<T>, I
 
     public new IInteractableRenderer<T> Renderer => (IInteractableRenderer<T>)base.Renderer;
 
+    public IInteractableRenderer<T> GetRenderer()
+    {
+        return Renderer;
+    }
+
     public virtual bool IsFocused => _inFocus;
 
     public virtual bool Enabled
