@@ -1,0 +1,192 @@
+# Lanterna-Sharp Java to C# Port TODO List
+
+This document tracks the comprehensive list of Java classes that need to be ported to C#. 
+
+## Summary Statistics
+
+- **Total Java Classes**: 186
+- **Already Ported**: 92 (49.5%)
+- **Remaining to Port**: 94 (50.5%)
+
+## Priority Levels
+- **HIGH**: Core functionality required for basic operation
+- **MEDIUM**: Important features that enhance usability  
+- **LOW**: Advanced/specialized features
+
+---
+
+## HIGH PRIORITY CLASSES (26 Missing)
+
+### Core GUI Infrastructure
+- [ ] `gui2/BasicWindow.java` - Basic window implementation
+- [ ] `gui2/WindowBasedTextGUI.java` - Essential GUI infrastructure
+- [ ] `gui2/AsynchronousTextGUIThread.java` - Async GUI threading
+- [ ] `gui2/WindowListener.java` - Window event handling interface
+- [ ] `gui2/WindowPostRenderer.java` - Post-rendering hooks
+
+### Essential Components
+- [ ] `gui2/ComboBox.java` - Dropdown combo box component
+- [ ] `gui2/SplitPanel.java` - Resizable split panel
+
+### Graphics Core
+- [ ] `graphics/TextImage.java` - Core graphics interface
+- [ ] `screen/VirtualScreen.java` - Virtual screen implementation
+
+### Terminal Infrastructure  
+- [ ] `terminal/DefaultTerminalFactory.java` - Auto-detection terminal factory
+- [ ] `terminal/TerminalTextGraphics.java` - Terminal-based text graphics
+- [ ] `terminal/ExtendedTerminal.java` - Extended terminal interface
+- [ ] `terminal/IOSafeTerminal.java` - IO-safe terminal interface
+- [ ] `terminal/IOSafeExtendedTerminal.java` - IO-safe extended terminal
+- [ ] `terminal/IOSafeTerminalAdapter.java` - IO-safe adapter
+
+### Platform Support
+- [ ] `terminal/ansi/UnixLikeTTYTerminal.java` - Unix TTY terminal
+- [ ] `terminal/ansi/StreamBasedTerminal.java` - Stream-based terminal base
+- [ ] `terminal/virtual/DefaultVirtualTerminal.java` - Virtual terminal implementation
+- [ ] `terminal/virtual/VirtualTerminal.java` - Virtual terminal interface
+- [ ] `terminal/virtual/VirtualTerminalListener.java` - Virtual terminal events
+
+### Input System Core
+- [ ] `input/InputDecoder.java` - Input sequence decoder
+- [ ] `input/KeyDecodingProfile.java` - Key decoding configuration
+- [ ] `input/DefaultKeyDecodingProfile.java` - Default key decoding
+- [ ] `input/CharacterPattern.java` - Input pattern matching interface
+
+### Essential Enums
+- [ ] `screen/WrapBehaviour.java` - Text wrapping behavior enum
+- [ ] `terminal/MouseCaptureMode.java` - Mouse capture configuration
+- [ ] `input/MouseActionType.java` - Mouse action types
+
+---
+
+## MEDIUM PRIORITY CLASSES (43 Missing)
+
+### Graphics Utilities
+- [ ] `graphics/AbstractTheme.java` - Base theme implementation
+- [ ] `graphics/DefaultMutableThemeStyle.java` - Mutable theme style
+- [ ] `graphics/DefaultShapeRenderer.java` - Shape drawing algorithms
+- [ ] `graphics/ShapeRenderer.java` - Shape rendering interface
+- [ ] `graphics/SimpleTheme.java` - Simple theme implementation
+- [ ] `graphics/SubTextGraphics.java` - Sub-region graphics wrapper
+- [ ] `graphics/ThemedTextGraphics.java` - Theme-aware graphics
+- [ ] `graphics/TextGraphicsWriter.java` - Writer pattern for graphics
+- [ ] `graphics/Scrollable.java` - Scrolling behavior interface
+- [ ] `graphics/StyleSet.java` - Style management utilities
+- [ ] `graphics/ThemeStyle.java` - Theme style interface
+- [ ] `graphics/DoublePrintingTextGraphics.java` - Double-width rendering
+- [ ] `graphics/NullTextGraphics.java` - Null object pattern
+
+### Theme System
+- [ ] `bundle/BundleLocator.java` - Resource bundle localization
+- [ ] `bundle/DefaultTheme.java` - Default theme implementation  
+- [ ] `bundle/LanternaThemes.java` - Theme management utilities
+- [ ] `bundle/LocalizedUIBundle.java` - Localized UI strings
+
+### Advanced Input Patterns
+- [ ] `input/AltAndCharacterPattern.java` - Alt+key combinations
+- [ ] `input/BasicCharacterPattern.java` - Basic character patterns
+- [ ] `input/CtrlAltAndCharacterPattern.java` - Ctrl+Alt+key patterns
+- [ ] `input/CtrlAndCharacterPattern.java` - Ctrl+key patterns
+- [ ] `input/EscapeSequenceCharacterPattern.java` - Escape sequences
+- [ ] `input/MouseCharacterPattern.java` - Mouse input patterns
+- [ ] `input/NormalCharacterPattern.java` - Normal character patterns
+- [ ] `input/ScreenInfoAction.java` - Screen information actions
+- [ ] `input/ScreenInfoCharacterPattern.java` - Screen info patterns
+
+### Terminal Implementations
+- [ ] `terminal/ansi/CygwinTerminal.java` - Cygwin terminal support
+- [ ] `terminal/ansi/TelnetProtocol.java` - Telnet protocol handling
+- [ ] `terminal/ansi/TelnetTerminal.java` - Telnet terminal
+- [ ] `terminal/ansi/TelnetTerminalServer.java` - Telnet server
+- [ ] `terminal/ansi/UnixTerminalSizeQuerier.java` - Unix size query
+- [ ] `terminal/virtual/TextBuffer.java` - Text buffer utilities
+- [ ] `terminal/virtual/VirtualTerminalTextGraphics.java` - Virtual graphics
+
+### Advanced GUI Features
+- [ ] `gui2/TextGUIThreadFactory.java` - GUI thread factory
+- [ ] `gui2/FatWindowDecorationRenderer.java` - Thick window borders
+
+### Screen Utilities
+- [ ] `screen/ScreenTranslator.java` - Screen coordinate translation
+
+### Core Utilities
+- [ ] `Symbols.java` - Complete Unicode symbols (current C# version incomplete)
+
+### Platform Specific
+- [ ] `terminal/ansi/FixedTerminalSizeProvider.java` - Fixed size provider
+- [ ] `terminal/SimpleTerminalResizeListener.java` - Simple resize handler
+- [ ] `terminal/TerminalFactory.java` - Terminal factory interface
+
+### Theme Infrastructure
+- [ ] `graphics/DelegatingTheme.java` - Theme delegation pattern
+- [ ] `graphics/DelegatingThemeDefinition.java` - Theme definition delegation
+- [ ] `graphics/PropertyTheme.java` - Property file-based themes
+- [ ] `graphics/ThemeDefinition.java` - Theme definition interface
+
+---
+
+## LOW PRIORITY CLASSES (25 Missing)
+
+### Swing/AWT Support (Desktop GUI)
+- [ ] `terminal/swing/AWTTerminalFontConfiguration.java`
+- [ ] `terminal/swing/AWTTerminalFrame.java`
+- [ ] `terminal/swing/GraphicsTerminalRenderer.java`
+- [ ] `terminal/swing/ScrollingSwingTerminal.java`
+- [ ] `terminal/swing/SwingTerminal.java`
+- [ ] `terminal/swing/SwingTerminalColorConfiguration.java`
+- [ ] `terminal/swing/SwingTerminalDeviceConfiguration.java`
+- [ ] `terminal/swing/SwingTerminalFontConfiguration.java`
+- [ ] `terminal/swing/SwingTerminalFrame.java`
+- [ ] `terminal/swing/TerminalAppearance.java`
+- [ ] `terminal/swing/TerminalEmulatorAutoCloseTrigger.java`
+- [ ] `terminal/swing/TerminalEmulatorColorConfiguration.java`
+- [ ] `terminal/swing/TerminalEmulatorDeviceConfiguration.java`
+- [ ] `terminal/swing/TerminalEmulatorPalette.java`
+- [ ] `terminal/swing/TerminalPalette.java`
+
+### Windows Console Support
+- [ ] `terminal/win/WindowsConsoleInputStream.java`
+- [ ] `terminal/win/WindowsConsoleOutputStream.java` 
+- [ ] `terminal/win/WindowsTerminal.java`
+
+### Test/Debug Utilities
+- [ ] `TestTerminalFactory.java`
+- [ ] `input/ScreenInfoActionType.java`
+
+### Advanced Graphics
+- [ ] `graphics/DelegatingTextImage.java`
+- [ ] `graphics/BasicTextImage.java`
+
+### Platform Detection
+- [ ] `terminal/DetachedTerminal.java`
+- [ ] `terminal/TerminalResizeListener.java`
+- [ ] `terminal/ansi/ANSIArgumentType.java`
+
+---
+
+## Package Completion Status
+
+| Package | Ported | Total | Completion |
+|---------|--------|-------|------------|
+| Core | 8 | 8 | 100% |
+| Bundle | 0 | 4 | 0% |
+| Graphics | 4 | 17 | 23% |
+| Input | 3 | 15 | 20% |
+| Screen | 7 | 9 | 78% |
+| Terminal | 4 | 46 | 9% |
+| GUI Core | 58 | 65 | 89% |
+| GUI Dialogs | 12 | 12 | 100% |
+| GUI Menu | 3 | 3 | 100% |
+| GUI Table | 9 | 9 | 100% |
+
+## Next Steps Recommendation
+
+Focus on **HIGH PRIORITY** classes first, particularly:
+1. Complete GUI infrastructure (BasicWindow, WindowBasedTextGUI)
+2. Essential components (ComboBox, SplitPanel)  
+3. Terminal factory and platform abstractions
+4. Core input decoding system
+5. Graphics fundamentals (TextImage, VirtualScreen)
+
+The terminal layer needs the most work (only 9% complete) but is critical for cross-platform support.
