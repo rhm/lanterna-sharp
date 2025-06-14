@@ -3,7 +3,7 @@ using Lanterna.Screen;
 
 namespace Lanterna.Graphics;
 
-public interface ITextGraphics
+public interface ITextGraphics : IScreenTranslator
 {
     TerminalSize Size { get; }
     ITextColor BackgroundColor { get; set; }

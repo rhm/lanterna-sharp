@@ -46,14 +46,41 @@ public class ThemeDefinition
 
 public interface IThemeStyle
 {
-    void ApplyTo(object graphics); // Use object to avoid circular reference for now
+    /// <summary>
+    /// Returns the foreground color associated with this style
+    /// </summary>
+    ITextColor ForegroundColor { get; }
+
+    /// <summary>
+    /// Returns the background color associated with this style
+    /// </summary>
+    ITextColor BackgroundColor { get; }
+
+    /// <summary>
+    /// Returns the set of SGR flags associated with this style. This set is either unmodifiable or a copy so
+    /// altering it will not change the theme in any way.
+    /// </summary>
+    ISet<SGR> SGRs { get; }
 }
 
 public class DefaultThemeStyle : IThemeStyle
 {
-    public void ApplyTo(object graphics)
+    public ITextColor ForegroundColor { get; }
+    public ITextColor BackgroundColor { get; }
+    public ISet<SGR> SGRs { get; }
+
+    public DefaultThemeStyle()
     {
-        // Default implementation - no special styling
+        ForegroundColor = new AnsiTextColor(AnsiColor.Default);
+        BackgroundColor = new AnsiTextColor(AnsiColor.Default);
+        SGRs = new HashSet<SGR>();
+    }
+
+    public DefaultThemeStyle(ITextColor foregroundColor, ITextColor backgroundColor, ISet<SGR> sgrs)
+    {
+        ForegroundColor = foregroundColor;
+        BackgroundColor = backgroundColor;
+        SGRs = new HashSet<SGR>(sgrs);
     }
 }
 

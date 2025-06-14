@@ -318,4 +318,28 @@ public abstract class AbstractTextGraphics : ITextGraphics
     }
 
     public abstract ITextGraphics NewTextGraphics(TerminalPosition topLeftCorner, TerminalSize size);
+
+    protected virtual TerminalPosition GetScreenLocation()
+    {
+        return TerminalPosition.TopLeftCorner;
+    }
+
+    public virtual TerminalPosition? ToScreenPosition(TerminalPosition? pos)
+    {
+        if (pos == null)
+            return GetScreenLocation();
+
+        TerminalPosition max = GetScreenLocation() + 
+            new TerminalPosition(Size.Columns - 1, Size.Rows - 1);
+        TerminalPosition loc = GetScreenLocation() + pos.Value;
+        
+        if (loc.Column > max.Column || loc.Row > max.Row)
+        {
+            return null;
+        }
+        else
+        {
+            return loc;
+        }
+    }
 }

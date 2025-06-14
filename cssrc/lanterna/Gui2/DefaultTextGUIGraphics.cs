@@ -47,25 +47,24 @@ public class DefaultTextGUIGraphics : ITextGUIGraphics
 
     public ITextGUIGraphics ApplyThemeStyle(IThemeStyle themeStyle)
     {
-        themeStyle?.ApplyTo(this);
+        if (themeStyle != null)
+        {
+            SetForegroundColor(themeStyle.ForegroundColor);
+            SetBackgroundColor(themeStyle.BackgroundColor);
+            SetModifiers(themeStyle.SGRs);
+        }
         return this;
     }
 
     public ITextGUIGraphics SetBackgroundColor(ITextColor? backgroundColor)
     {
-        if (backgroundColor != null)
-        {
-            _backend.BackgroundColor = backgroundColor;
-        }
+        _backend.SetBackgroundColor(backgroundColor);
         return this;
     }
 
     public ITextGUIGraphics SetForegroundColor(ITextColor? foregroundColor)
     {
-        if (foregroundColor != null)
-        {
-            _backend.ForegroundColor = foregroundColor;
-        }
+        _backend.SetForegroundColor(foregroundColor);
         return this;
     }
 
@@ -257,7 +256,12 @@ public class DefaultTextGUIGraphics : ITextGUIGraphics
 
     public ITextGUIGraphics SetStyleFrom(IStyleSet source)
     {
-        _backend.SetStyleFrom(source);
+        if (source != null)
+        {
+            SetBackgroundColor(source.BackgroundColor);
+            SetForegroundColor(source.ForegroundColor);
+            SetModifiers(source.ActiveModifiers);
+        }
         return this;
     }
 
@@ -372,6 +376,11 @@ public class DefaultTextGUIGraphics : ITextGUIGraphics
     public TextCharacter? GetCharacter(TerminalPosition position)
     {
         return _backend.GetCharacter(position);
+    }
+
+    public TerminalPosition? ToScreenPosition(TerminalPosition? position)
+    {
+        return _backend.ToScreenPosition(position);
     }
 
     Graphics.ITextGraphics Graphics.ITextGraphics.SetStyleFrom(IStyleSet source) => 
