@@ -50,9 +50,23 @@ public interface ITextGraphics
     ITextGraphics SetStyleFrom(IStyleSet source);
 }
 
-public interface ITextImage
+public interface ITextImage : IScrollable
 {
     TerminalSize Size { get; }
+    TextCharacter? GetCharacterAt(TerminalPosition position);
+    TextCharacter? GetCharacterAt(int column, int row);
+    void SetCharacterAt(TerminalPosition position, TextCharacter character);
+    void SetCharacterAt(int column, int row, TextCharacter character);
+    void SetAll(TextCharacter character);
+    ITextGraphics NewTextGraphics();
+    ITextImage Resize(TerminalSize newSize, TextCharacter filler);
+    void CopyTo(ITextImage destination);
+    void CopyTo(ITextImage destination, int startRowIndex, int rows, int startColumnIndex, int columns, int destinationRowOffset, int destinationColumnOffset);
+}
+
+public interface IScrollable
+{
+    void ScrollLines(int firstLine, int lastLine, int distance);
 }
 
 public interface IStyleSet

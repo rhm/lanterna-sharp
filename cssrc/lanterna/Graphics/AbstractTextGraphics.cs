@@ -249,13 +249,43 @@ public abstract class AbstractTextGraphics : ITextGraphics
 
     public virtual ITextGraphics DrawImage(TerminalPosition topLeft, ITextImage image)
     {
-        // Stub implementation
-        return this;
+        if (image == null)
+            return this;
+
+        return DrawImage(topLeft, image, TerminalPosition.TopLeftCorner, image.Size);
     }
 
     public virtual ITextGraphics DrawImage(TerminalPosition topLeft, ITextImage image, TerminalPosition sourceImageTopLeft, TerminalSize sourceImageSize)
     {
-        // Stub implementation
+        if (image == null)
+            return this;
+
+        // Calculate actual copy area bounds
+        int sourceStartX = Math.Max(0, sourceImageTopLeft.Column);
+        int sourceStartY = Math.Max(0, sourceImageTopLeft.Row);
+        int sourceEndX = Math.Min(image.Size.Columns, sourceImageTopLeft.Column + sourceImageSize.Columns);
+        int sourceEndY = Math.Min(image.Size.Rows, sourceImageTopLeft.Row + sourceImageSize.Rows);
+
+        // Copy each character from the image to this graphics
+        for (int sourceY = sourceStartY; sourceY < sourceEndY; sourceY++)
+        {
+            for (int sourceX = sourceStartX; sourceX < sourceEndX; sourceX++)
+            {
+                TextCharacter? character = image.GetCharacterAt(sourceX, sourceY);
+                if (character != null)
+                {
+                    int targetX = topLeft.Column + (sourceX - sourceImageTopLeft.Column);
+                    int targetY = topLeft.Row + (sourceY - sourceImageTopLeft.Row);
+                    
+                    // Check bounds of target graphics
+                    if (targetX >= 0 && targetX < Size.Columns && targetY >= 0 && targetY < Size.Rows)
+                    {
+                        SetCharacter(targetX, targetY, character);
+                    }
+                }
+            }
+        }
+
         return this;
     }
 
