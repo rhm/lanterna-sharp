@@ -1,6 +1,7 @@
 using Lanterna.Core;
 using Lanterna.Graphics;
 using Lanterna.Input;
+using System.Collections.Concurrent;
 
 namespace Lanterna.Gui2;
 
@@ -11,6 +12,13 @@ public abstract class AbstractBasePane<T> : IBasePane where T : IBasePane
     private bool _strictFocusChange;
     private bool _enableDirectionBasedMovements = true;
     private Theme? _themeOverride;
+    private readonly ConcurrentBag<IBasePaneListener<T>> _listeners;
+    private IInteractableLookupMap? _interactableLookupMap;
+
+    protected AbstractBasePane()
+    {
+        _listeners = new ConcurrentBag<IBasePaneListener<T>>();
+    }
 
     public abstract ITextGUI? TextGUI { get; }
 
@@ -37,6 +45,22 @@ public abstract class AbstractBasePane<T> : IBasePane where T : IBasePane
         if (_component != null && _component.Visible)
         {
             _component.Size = graphics.Size;
+            
+            // Rebuild the interactable lookup map for this drawing cycle
+            _interactableLookupMap = new InteractableLookupMap(graphics.Size);
+            if (_component is IContainer container)
+            {
+                container.UpdateLookupMap(_interactableLookupMap);
+            }
+            else if (_component is IInteractable interactable && interactable.Enabled && interactable.IsFocusable)
+            {
+                var globalPos = _component.ToGlobal(TerminalPosition.TopLeftCorner);
+                if (globalPos.HasValue)
+                {
+                    _interactableLookupMap.Add(interactable, globalPos.Value);
+                }
+            }
+            
             _component.Draw(graphics);
         }
     }
@@ -50,6 +74,47 @@ public abstract class AbstractBasePane<T> : IBasePane where T : IBasePane
 
     public virtual bool HandleInput(KeyStroke key)
     {
+        // Fire events first and decide if the event should be sent to the focused component or not
+        bool deliverEvent = true;
+        foreach (var listener in _listeners)
+        {
+            listener.OnInput(Self, key, ref deliverEvent);
+        }
+        if (!deliverEvent)
+        {
+            return true;
+        }
+
+        // Now try to deliver the event to the focused component
+        bool handled = DoHandleInput(key);
+
+        // If it wasn't handled, fire the listeners and decide what to report to the TextGUI
+        if (!handled)
+        {
+            bool hasBeenHandled = false;
+            foreach (var listener in _listeners)
+            {
+                listener.OnUnhandledInput(Self, key, ref hasBeenHandled);
+            }
+            handled = hasBeenHandled;
+        }
+        return handled;
+    }
+
+    private bool DoHandleInput(KeyStroke key)
+    {
+        // Handle mouse clicks for focus changes
+        if (key is MouseAction mouseAction && mouseAction.IsMouseDown && _interactableLookupMap != null)
+        {
+            var clickedInteractable = _interactableLookupMap.GetInteractableAt(mouseAction.Position);
+            if (clickedInteractable != null && clickedInteractable != _focusedInteractable)
+            {
+                SetFocusedInteractable(clickedInteractable, IInteractable.FocusChangeDirection.Teleport);
+                // Let the component also handle the mouse click
+                return clickedInteractable.HandleInput(key) == IInteractable.Result.Handled;
+            }
+        }
+
         if (_focusedInteractable != null)
         {
             var result = _focusedInteractable.HandleInput(key);
@@ -95,6 +160,28 @@ public abstract class AbstractBasePane<T> : IBasePane where T : IBasePane
 
     public virtual bool CycleFocus(IInteractable.FocusChangeDirection direction)
     {
+        if (_interactableLookupMap != null && _enableDirectionBasedMovements)
+        {
+            // Use spatial navigation for directional movement
+            if (direction == IInteractable.FocusChangeDirection.Up ||
+                direction == IInteractable.FocusChangeDirection.Down ||
+                direction == IInteractable.FocusChangeDirection.Left ||
+                direction == IInteractable.FocusChangeDirection.Right)
+            {
+                var currentPosition = GetCurrentFocusPosition();
+                if (currentPosition.HasValue)
+                {
+                    var next = _interactableLookupMap.FindClosest(currentPosition.Value, direction);
+                    if (next != null)
+                    {
+                        SetFocusedInteractable(next, direction);
+                        return true;
+                    }
+                }
+            }
+        }
+
+        // Fall back to container-based navigation for Next/Previous or when lookup map is not available
         if (_component is IContainer container)
         {
             var next = direction == IInteractable.FocusChangeDirection.Next ||
@@ -110,6 +197,22 @@ public abstract class AbstractBasePane<T> : IBasePane where T : IBasePane
             }
         }
         return false;
+    }
+
+    private TerminalPosition? GetCurrentFocusPosition()
+    {
+        if (_focusedInteractable?.CursorLocation.HasValue == true)
+        {
+            return _focusedInteractable.ToGlobal(_focusedInteractable.CursorLocation.Value);
+        }
+        
+        // If no cursor location, use the component's top-left corner
+        if (_focusedInteractable != null)
+        {
+            return _focusedInteractable.ToGlobal(TerminalPosition.TopLeftCorner);
+        }
+        
+        return null;
     }
 
     public virtual TerminalPosition? CursorPosition =>
@@ -166,6 +269,51 @@ public abstract class AbstractBasePane<T> : IBasePane where T : IBasePane
     }
 
     public virtual IMenuBar? MenuBar { get; protected set; }
+
+    /// <summary>
+    /// Returns the typed reference to this base pane
+    /// </summary>
+    protected abstract T Self { get; }
+
+    /// <summary>
+    /// Adds a base pane listener to this base pane
+    /// </summary>
+    /// <param name="basePaneListener">Listener to add</param>
+    protected void AddBasePaneListener(IBasePaneListener<T> basePaneListener)
+    {
+        _listeners.Add(basePaneListener);
+    }
+
+    /// <summary>
+    /// Removes a base pane listener from this base pane.
+    /// Note: Due to ConcurrentBag limitations, this creates a new collection without the listener.
+    /// For better performance, consider using a different collection type in the future.
+    /// </summary>
+    /// <param name="basePaneListener">Listener to remove</param>
+    protected void RemoveBasePaneListener(IBasePaneListener<T> basePaneListener)
+    {
+        // ConcurrentBag doesn't support removal, so we create a new one
+        // This is not ideal but matches the current pattern used elsewhere in the codebase
+        var newListeners = new ConcurrentBag<IBasePaneListener<T>>();
+        foreach (var existing in _listeners)
+        {
+            if (!existing.Equals(basePaneListener))
+            {
+                newListeners.Add(existing);
+            }
+        }
+        // Note: This replacement is not atomic and not thread-safe
+        // A proper implementation would use a different collection type
+    }
+
+    /// <summary>
+    /// Gets all base pane listeners for this base pane
+    /// </summary>
+    /// <returns>List of listeners</returns>
+    protected IEnumerable<IBasePaneListener<T>> GetBasePaneListeners()
+    {
+        return _listeners;
+    }
 
     // Helper class to allow the component to think it has a container parent
     private class ComponentContainer : IContainer

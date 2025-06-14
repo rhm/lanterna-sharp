@@ -172,4 +172,6 @@ public class TextInputDialog : DialogWindow
             .Build();
         return textInputDialog.ShowDialog(textGUI) as string;
     }
+
+    protected override IWindow Self => this;
 }

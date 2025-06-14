@@ -60,4 +60,6 @@ public class MenuPopupWindow : AbstractWindow
         }
         Invalidate();
     }
+
+    protected override IWindow Self => this;
 }

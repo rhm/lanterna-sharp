@@ -103,4 +103,6 @@ public class MessageDialog : DialogWindow
         }
         return builder.Build().ShowDialog(textGUI) as MessageDialogButton?;
     }
+
+    protected override IWindow Self => this;
 }

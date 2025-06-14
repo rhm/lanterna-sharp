@@ -92,12 +92,10 @@ public interface IWindowPostRenderer
     void PostRender(ITextGUIGraphics graphics, IWindowBasedTextGUI textGUI, IWindow window);
 }
 
-public interface IWindowListener
+public interface IWindowListener : IBasePaneListener<IWindow>
 {
     void OnResized(IWindow window, TerminalSize oldSize, TerminalSize newSize);
     void OnMoved(IWindow window, TerminalPosition oldPosition, TerminalPosition newPosition);
-    void OnInput(IWindow window, KeyStroke keyStroke, ref bool handled);
-    void OnUnhandledInput(IWindow window, KeyStroke keyStroke, ref bool handled);
 }
 
 public interface IMenuBar : IComponent

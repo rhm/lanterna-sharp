@@ -606,5 +606,7 @@ public class MultiWindowTextGUI : AbstractTextGUI, IWindowBasedTextGUI
         {
             return globalPosition;
         }
+
+        protected override IBasePane Self => this;
     }
 }

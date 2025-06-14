@@ -298,6 +298,8 @@ public abstract class AbstractWindow : AbstractBasePane<IWindow>, IWindow
         return ToGlobalFromContentRelative(localPosition);
     }
 
+    protected override IWindow Self => this;
+
     public override TerminalPosition? FromGlobal(TerminalPosition globalPosition)
     {
         return FromGlobalToContentRelative(globalPosition);

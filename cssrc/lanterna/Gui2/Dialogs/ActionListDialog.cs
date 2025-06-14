@@ -105,4 +105,6 @@ public class ActionListDialog : DialogWindow
             .Build();
         actionListDialog.ShowDialog(textGUI);
     }
+
+    protected override IWindow Self => this;
 }
