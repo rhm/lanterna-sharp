@@ -10,7 +10,15 @@ public class MouseAction : KeyStroke
     public int Button { get; set; }
     
     public MouseAction(MouseActionType actionType, int button, TerminalPosition position)
-        : base(KeyType.MouseEvent)
+        : base(KeyType.MouseEvent, false, false, false)
+    {
+        ActionType = actionType;
+        Button = button;
+        Position = position;
+    }
+    
+    public MouseAction(MouseActionType actionType, int button, TerminalPosition position, bool ctrlDown, bool altDown, bool shiftDown)
+        : base(KeyType.MouseEvent, ctrlDown, altDown, shiftDown)
     {
         ActionType = actionType;
         Button = button;

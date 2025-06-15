@@ -5,8 +5,8 @@ This document tracks the comprehensive list of Java classes that need to be port
 ## Summary Statistics
 
 - **Total Java Classes**: 186
-- **Already Ported**: 116 (62.4%)
-- **Remaining to Port**: 70 (37.6%)
+- **Already Ported**: 125 (67.2%)
+- **Remaining to Port**: 61 (32.8%)
 
 ## Priority Levels
 - **HIGH**: Core functionality required for basic operation
@@ -60,7 +60,7 @@ This document tracks the comprehensive list of Java classes that need to be port
 
 ---
 
-## MEDIUM PRIORITY CLASSES (36 Missing)
+## MEDIUM PRIORITY CLASSES (27 Missing)
 
 ### Graphics Utilities
 - [ ] `graphics/AbstractTheme.java` - Base theme implementation
@@ -84,15 +84,15 @@ This document tracks the comprehensive list of Java classes that need to be port
 - [ ] `bundle/LocalizedUIBundle.java` - Localized UI strings
 
 ### Advanced Input Patterns
-- [ ] `input/AltAndCharacterPattern.java` - Alt+key combinations
-- [ ] `input/BasicCharacterPattern.java` - Basic character patterns
-- [ ] `input/CtrlAltAndCharacterPattern.java` - Ctrl+Alt+key patterns
-- [ ] `input/CtrlAndCharacterPattern.java` - Ctrl+key patterns
-- [ ] `input/EscapeSequenceCharacterPattern.java` - Escape sequences
-- [ ] `input/MouseCharacterPattern.java` - Mouse input patterns
-- [ ] `input/NormalCharacterPattern.java` - Normal character patterns
-- [ ] `input/ScreenInfoAction.java` - Screen information actions
-- [ ] `input/ScreenInfoCharacterPattern.java` - Screen info patterns
+- [x] `input/AltAndCharacterPattern.java` - Alt+key combinations
+- [x] `input/BasicCharacterPattern.java` - Basic character patterns (already existed)
+- [x] `input/CtrlAltAndCharacterPattern.java` - Ctrl+Alt+key patterns
+- [x] `input/CtrlAndCharacterPattern.java` - Ctrl+key patterns
+- [x] `input/EscapeSequenceCharacterPattern.java` - Escape sequences
+- [x] `input/MouseCharacterPattern.java` - Mouse input patterns
+- [x] `input/NormalCharacterPattern.java` - Normal character patterns (already existed)
+- [x] `input/ScreenInfoAction.java` - Screen information actions
+- [x] `input/ScreenInfoCharacterPattern.java` - Screen info patterns
 
 ### Terminal Implementations
 - [-] `terminal/ansi/CygwinTerminal.java` - Cygwin terminal support - DON'T DO THIS
@@ -172,7 +172,7 @@ This document tracks the comprehensive list of Java classes that need to be port
 | Core | 8 | 8 | 100% |
 | Bundle | 0 | 4 | 0% |
 | Graphics | 5 | 17 | 29% |
-| Input | 3 | 15 | 20% |
+| Input | 12 | 15 | 80% |
 | Screen | 8 | 9 | 89% |
 | Terminal | 18 | 46 | 39% |
 | GUI Core | 65 | 65 | 100% |
