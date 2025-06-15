@@ -5,8 +5,8 @@ This document tracks the comprehensive list of Java classes that need to be port
 ## Summary Statistics
 
 - **Total Java Classes**: 186
-- **Already Ported**: 125 (67.2%)
-- **Remaining to Port**: 61 (32.8%)
+- **Already Ported**: 127 (68.3%)
+- **Remaining to Port**: 59 (31.7%)
 
 ## Priority Levels
 - **HIGH**: Core functionality required for basic operation
@@ -60,7 +60,7 @@ This document tracks the comprehensive list of Java classes that need to be port
 
 ---
 
-## MEDIUM PRIORITY CLASSES (27 Missing)
+## MEDIUM PRIORITY CLASSES (25 Missing)
 
 ### Graphics Utilities
 - [ ] `graphics/AbstractTheme.java` - Base theme implementation
@@ -108,10 +108,10 @@ This document tracks the comprehensive list of Java classes that need to be port
 - [ ] `gui2/FatWindowDecorationRenderer.java` - Thick window borders
 
 ### Screen Utilities
-- [ ] `screen/ScreenTranslator.java` - Screen coordinate translation
+- [x] `screen/ScreenTranslator.java` - Screen coordinate translation (implemented as IScreenTranslator.cs)
 
 ### Core Utilities
-- [ ] `Symbols.java` - Complete Unicode symbols (current C# version incomplete)
+- [x] `Symbols.java` - Complete Unicode symbols (current C# version now complete)
 
 ### Platform Specific
 - [ ] `terminal/ansi/FixedTerminalSizeProvider.java` - Fixed size provider
@@ -169,11 +169,11 @@ This document tracks the comprehensive list of Java classes that need to be port
 
 | Package | Ported | Total | Completion |
 |---------|--------|-------|------------|
-| Core | 8 | 8 | 100% |
+| Core | 9 | 9 | 100% |
 | Bundle | 0 | 4 | 0% |
 | Graphics | 5 | 17 | 29% |
 | Input | 12 | 15 | 80% |
-| Screen | 8 | 9 | 89% |
+| Screen | 9 | 9 | 100% |
 | Terminal | 18 | 46 | 39% |
 | GUI Core | 65 | 65 | 100% |
 | GUI Dialogs | 12 | 12 | 100% |
