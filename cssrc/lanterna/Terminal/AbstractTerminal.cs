@@ -18,7 +18,9 @@
  */
 
 using Lanterna.Core;
+using Lanterna.Graphics;
 using Lanterna.Input;
+using Lanterna.Screen;
 
 namespace Lanterna.Terminal;
 
@@ -161,6 +163,8 @@ public class TerminalTextGraphics : ITextGraphics
         _activeModifiers = new HashSet<SGR>();
     }
 
+    public TerminalSize Size => _terminal.GetTerminalSize();
+
     public ITextColor ForegroundColor
     {
         get => _foregroundColor;
@@ -180,6 +184,7 @@ public class TerminalTextGraphics : ITextGraphics
             _terminal.SetBackgroundColor(_backgroundColor);
         }
     }
+
 
     public void SetCharacter(int column, int row, char character)
     {
@@ -323,4 +328,6 @@ public class TerminalTextGraphics : ITextGraphics
             }
         }
     }
+
 }
+
