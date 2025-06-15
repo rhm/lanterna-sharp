@@ -177,6 +177,21 @@ public class ScreenBuffer
     }
 
     /// <summary>
+    /// Copies a region from this buffer to another ScreenBuffer
+    /// </summary>
+    /// <param name="destination">Destination buffer to copy to</param>
+    /// <param name="sourceStartRow">Starting row in this buffer</param>
+    /// <param name="sourceRowCount">Number of rows to copy</param>
+    /// <param name="sourceStartColumn">Starting column in this buffer</param>
+    /// <param name="sourceColumnCount">Number of columns to copy</param>
+    /// <param name="destStartRow">Starting row in the destination buffer to copy to</param>
+    /// <param name="destStartColumn">Starting column in the destination buffer to copy to</param>
+    public void CopyTo(ScreenBuffer destination, int sourceStartRow, int sourceRowCount, int sourceStartColumn, int sourceColumnCount, int destStartRow, int destStartColumn)
+    {
+        destination.CopyFrom(this, sourceStartRow, sourceRowCount, sourceStartColumn, sourceColumnCount, destStartRow, destStartColumn);
+    }
+
+    /// <summary>
     /// Copies a region from another ScreenBuffer into this buffer
     /// </summary>
     /// <param name="source">Source buffer to copy from</param>

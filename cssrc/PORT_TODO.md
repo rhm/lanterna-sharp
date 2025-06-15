@@ -5,8 +5,8 @@ This document tracks the comprehensive list of Java classes that need to be port
 ## Summary Statistics
 
 - **Total Java Classes**: 186
-- **Already Ported**: 100 (53.8%)
-- **Remaining to Port**: 86 (46.2%)
+- **Already Ported**: 103 (55.4%)
+- **Remaining to Port**: 83 (44.6%)
 
 ## Priority Levels
 - **HIGH**: Core functionality required for basic operation
@@ -15,7 +15,7 @@ This document tracks the comprehensive list of Java classes that need to be port
 
 ---
 
-## HIGH PRIORITY CLASSES (18 Missing)
+## HIGH PRIORITY CLASSES (16 Missing)
 
 ### Core GUI Infrastructure
 - [ ] `gui2/BasicWindow.java` - Basic window implementation
@@ -29,8 +29,8 @@ This document tracks the comprehensive list of Java classes that need to be port
 - [ ] `gui2/SplitPanel.java` - Resizable split panel
 
 ### Graphics Core
-- [ ] `graphics/TextImage.java` - Core graphics interface
-- [ ] `screen/VirtualScreen.java` - Virtual screen implementation
+- [x] `graphics/TextImage.java` - Core graphics interface (interface already existed in ITextGraphics.cs)
+- [x] `screen/VirtualScreen.java` - Virtual screen implementation
 
 ### Terminal Infrastructure  
 - [x] `terminal/DefaultTerminalFactory.java` - Auto-detection terminal factory
@@ -60,7 +60,7 @@ This document tracks the comprehensive list of Java classes that need to be port
 
 ---
 
-## MEDIUM PRIORITY CLASSES (43 Missing)
+## MEDIUM PRIORITY CLASSES (42 Missing)
 
 ### Graphics Utilities
 - [ ] `graphics/AbstractTheme.java` - Base theme implementation
@@ -71,7 +71,7 @@ This document tracks the comprehensive list of Java classes that need to be port
 - [ ] `graphics/SubTextGraphics.java` - Sub-region graphics wrapper
 - [ ] `graphics/ThemedTextGraphics.java` - Theme-aware graphics
 - [ ] `graphics/TextGraphicsWriter.java` - Writer pattern for graphics
-- [ ] `graphics/Scrollable.java` - Scrolling behavior interface
+- [x] `graphics/Scrollable.java` - Scrolling behavior interface (interface already existed in ITextGraphics.cs)
 - [ ] `graphics/StyleSet.java` - Style management utilities
 - [ ] `graphics/ThemeStyle.java` - Theme style interface
 - [ ] `graphics/DoublePrintingTextGraphics.java` - Double-width rendering
@@ -171,9 +171,9 @@ This document tracks the comprehensive list of Java classes that need to be port
 |---------|--------|-------|------------|
 | Core | 8 | 8 | 100% |
 | Bundle | 0 | 4 | 0% |
-| Graphics | 4 | 17 | 23% |
+| Graphics | 5 | 17 | 29% |
 | Input | 3 | 15 | 20% |
-| Screen | 7 | 9 | 78% |
+| Screen | 8 | 9 | 89% |
 | Terminal | 12 | 46 | 26% |
 | GUI Core | 58 | 65 | 89% |
 | GUI Dialogs | 12 | 12 | 100% |

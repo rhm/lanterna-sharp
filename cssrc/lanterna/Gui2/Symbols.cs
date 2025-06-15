@@ -63,6 +63,12 @@ public static class Symbols
     public const char Block_Sparse = '░';
     public const char Block_Middle = '▒';
     
+    // For compatibility with Java Lanterna naming
+    public const char BLOCK_SOLID = '█';
+    public const char BLOCK_DENSE = '▓';
+    public const char BLOCK_MIDDLE = '▒';
+    public const char BLOCK_SPARSE = '░';
+    
     // Arrow and triangle characters
     public const char Triangle_Up_Pointing_Black = '▲';
     public const char Triangle_Down_Pointing_Black = '▼';

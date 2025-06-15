@@ -211,6 +211,12 @@ public abstract class AbstractScreen : IScreen
     /// Gets the back buffer for use by subclasses
     /// </summary>
     protected ScreenBuffer BackBuffer => _backBuffer;
+    
+    /// <summary>
+    /// Returns the back buffer connected to this screen, don't use this unless you know what you are doing!
+    /// </summary>
+    /// <returns>This Screen's back buffer</returns>
+    public ScreenBuffer GetBackBuffer() => _backBuffer;
 
     /// <summary>
     /// Gets the front buffer for use by subclasses
