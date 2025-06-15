@@ -19,6 +19,7 @@
 
 using System.Globalization;
 using System.Text;
+using Lanterna.Graphics;
 
 namespace Lanterna.Core;
 
@@ -188,5 +189,195 @@ public static class TerminalTextUtils
         }
 
         return result.ToString();
+    }
+
+    /// <summary>
+    /// Given a string and an index in that string, returns the complete ANSI control sequence starting at that position.
+    /// If there is no control sequence starting there, the method will return null.
+    /// </summary>
+    /// <param name="text">String to scan for control sequences</param>
+    /// <param name="index">Index in the string where the control sequence begins</param>
+    /// <returns>null if there was no control sequence starting at the specified index, otherwise the entire control sequence</returns>
+    public static string? GetANSIControlSequenceAt(string text, int index)
+    {
+        int len = GetANSIControlSequenceLength(text, index);
+        return len == 0 ? null : text.Substring(index, len);
+    }
+
+    /// <summary>
+    /// Given a string and an index in that string, returns the number of characters starting at index that make up
+    /// a complete ANSI control sequence. If there is no control sequence starting there, the method will return 0.
+    /// </summary>
+    /// <param name="text">String to scan for control sequences</param>
+    /// <param name="index">Index in the string where the control sequence begins</param>
+    /// <returns>0 if there was no control sequence starting at the specified index, otherwise the length of the entire control sequence</returns>
+    public static int GetANSIControlSequenceLength(string text, int index)
+    {
+        int len = 0;
+        int restlen = text.Length - index;
+        
+        if (restlen >= 3) // Control sequences require a minimum of three characters
+        {
+            char esc = text[index];
+            char bracket = text[index + 1];
+            
+            if (esc == 0x1B && bracket == '[') // escape & open bracket
+            {
+                len = 3; // esc, bracket and (later) terminator
+                
+                // digits or semicolons can still precede the terminator:
+                for (int i = 2; i < restlen; i++)
+                {
+                    char ch = text[i + index];
+                    // only ascii-digits or semicolons allowed here:
+                    if ((ch >= '0' && ch <= '9') || ch == ';')
+                    {
+                        len++;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                
+                // if string ends in digits/semicolons, then it's not a sequence.
+                if (len > restlen)
+                {
+                    len = 0;
+                }
+            }
+        }
+        
+        return len;
+    }
+
+    /// <summary>
+    /// Updates style modifiers from a CSI (Control Sequence Introducer) code
+    /// </summary>
+    /// <param name="controlSequence">The ANSI control sequence to parse</param>
+    /// <param name="target">The target style set to update</param>
+    /// <param name="original">The original style set to restore from when reset codes are encountered</param>
+    public static void UpdateModifiersFromCSICode<T>(string controlSequence, IStyleSet<T> target, IStyleSet original) where T : IStyleSet<T>
+    {
+        char controlCodeType = controlSequence[controlSequence.Length - 1];
+        string codeString = controlSequence.Substring(2, controlSequence.Length - 3);
+        var codes = MapCodesToIntArray(codeString.Split(';'));
+
+        var palette = new ITextColor[]
+        {
+            new AnsiTextColor(AnsiColor.Black),
+            new AnsiTextColor(AnsiColor.Red),
+            new AnsiTextColor(AnsiColor.Green),
+            new AnsiTextColor(AnsiColor.Yellow),
+            new AnsiTextColor(AnsiColor.Blue),
+            new AnsiTextColor(AnsiColor.Magenta),
+            new AnsiTextColor(AnsiColor.Cyan),
+            new AnsiTextColor(AnsiColor.White)
+        };
+
+        if (controlCodeType == 'm') // SGRs
+        {
+            for (int i = 0; i < codes.Length; i++)
+            {
+                int code = codes[i];
+                switch (code)
+                {
+                    case 0:
+                        target.SetStyleFrom(original);
+                        break;
+                    case 1:
+                        target.EnableModifiers(SGR.Bold);
+                        break;
+                    case 3:
+                        target.EnableModifiers(SGR.Italic);
+                        break;
+                    case 4:
+                        target.EnableModifiers(SGR.Underline);
+                        break;
+                    case 5:
+                        target.EnableModifiers(SGR.Blink);
+                        break;
+                    case 7:
+                        target.EnableModifiers(SGR.Reverse);
+                        break;
+                    case 21: // both do. 21 seems more straightforward.
+                    case 22:
+                        target.DisableModifiers(SGR.Bold);
+                        break;
+                    case 23:
+                        target.DisableModifiers(SGR.Italic);
+                        break;
+                    case 24:
+                        target.DisableModifiers(SGR.Underline);
+                        break;
+                    case 25:
+                        target.DisableModifiers(SGR.Blink);
+                        break;
+                    case 27:
+                        target.DisableModifiers(SGR.Reverse);
+                        break;
+                    case 38:
+                        if (i + 2 < codes.Length && codes[i + 1] == 5)
+                        {
+                            target.SetForegroundColor(new IndexedColor(codes[i + 2]));
+                            i += 2;
+                        }
+                        else if (i + 4 < codes.Length && codes[i + 1] == 2)
+                        {
+                            target.SetForegroundColor(new RgbColor(codes[i + 2], codes[i + 3], codes[i + 4]));
+                            i += 4;
+                        }
+                        break;
+                    case 39:
+                        target.SetForegroundColor(original.ForegroundColor);
+                        break;
+                    case 48:
+                        if (i + 2 < codes.Length && codes[i + 1] == 5)
+                        {
+                            target.SetBackgroundColor(new IndexedColor(codes[i + 2]));
+                            i += 2;
+                        }
+                        else if (i + 4 < codes.Length && codes[i + 1] == 2)
+                        {
+                            target.SetBackgroundColor(new RgbColor(codes[i + 2], codes[i + 3], codes[i + 4]));
+                            i += 4;
+                        }
+                        break;
+                    case 49:
+                        target.SetBackgroundColor(original.BackgroundColor);
+                        break;
+                    default:
+                        if (code >= 30 && code <= 37)
+                        {
+                            target.SetForegroundColor(palette[code - 30]);
+                        }
+                        else if (code >= 40 && code <= 47)
+                        {
+                            target.SetBackgroundColor(palette[code - 40]);
+                        }
+                        break;
+                }
+            }
+        }
+    }
+
+    private static int[] MapCodesToIntArray(string[] codes)
+    {
+        var result = new int[codes.Length];
+        for (int i = 0; i < result.Length; i++)
+        {
+            if (string.IsNullOrEmpty(codes[i]))
+            {
+                result[i] = 0;
+            }
+            else
+            {
+                if (!int.TryParse(codes[i], out result[i]))
+                {
+                    throw new ArgumentException($"Unknown CSI code {codes[i]}");
+                }
+            }
+        }
+        return result;
     }
 }
