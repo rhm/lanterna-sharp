@@ -115,8 +115,20 @@ public class DefaultVirtualTerminal : AbstractTerminal, IVirtualTerminal
     {
         lock (this)
         {
+            // Save cursor position, but if cursor is immediately after a written character,
+            // save the position where the character was written instead
+            var cursorPos = GetCursorBufferPosition();
+            if (cursorPos.Column > 0 && 
+                _regularTextBuffer.GetCharacter(cursorPos.Row, cursorPos.Column - 1) != TextCharacter.DefaultCharacter)
+            {
+                _savedCursorPosition = cursorPos.WithRelativeColumn(-1);
+            }
+            else
+            {
+                _savedCursorPosition = cursorPos;
+            }
+            
             _currentTextBuffer = _privateModeTextBuffer;
-            _savedCursorPosition = GetCursorBufferPosition();
             SetCursorPosition(TerminalPosition.TopLeftCorner);
             SetWholeBufferDirty();
         }

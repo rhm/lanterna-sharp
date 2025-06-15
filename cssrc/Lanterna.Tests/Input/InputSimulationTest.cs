@@ -54,7 +54,7 @@ public class InputSimulationTest
         var virtualTerminal = new DefaultVirtualTerminal();
         
         virtualTerminal.AddInput(new KeyStroke('A', true, false));
-        virtualTerminal.AddInput(new KeyStroke('B', false, false));
+        virtualTerminal.AddInput(new KeyStroke('B', false, false, true));
         virtualTerminal.AddInput(new KeyStroke('C', false, true));
         
         var ctrlA = virtualTerminal.PollInput();
