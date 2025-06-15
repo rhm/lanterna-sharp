@@ -5,8 +5,8 @@ This document tracks the comprehensive list of Java classes that need to be port
 ## Summary Statistics
 
 - **Total Java Classes**: 186
-- **Already Ported**: 148 (79.6%)
-- **Remaining to Port**: 38 (20.4%)
+- **Already Ported**: 150 (80.6%)
+- **Remaining to Port**: 36 (19.4%)
 
 ## Priority Levels
 - **HIGH**: Core functionality required for basic operation
@@ -60,7 +60,7 @@ This document tracks the comprehensive list of Java classes that need to be port
 
 ---
 
-## MEDIUM PRIORITY CLASSES (4 Missing)
+## MEDIUM PRIORITY CLASSES (2 Missing)
 
 ### Graphics Utilities
 - [x] `graphics/AbstractTheme.java` - Base theme implementation (complete hierarchical theme system)
@@ -104,8 +104,8 @@ This document tracks the comprehensive list of Java classes that need to be port
 - [x] `terminal/virtual/VirtualTerminalTextGraphics.java` - Virtual graphics
 
 ### Advanced GUI Features
-- [ ] `gui2/TextGUIThreadFactory.java` - GUI thread factory
-- [ ] `gui2/FatWindowDecorationRenderer.java` - Thick window borders
+- [x] `gui2/TextGUIThreadFactory.java` - GUI thread factory
+- [x] `gui2/FatWindowDecorationRenderer.java` - Thick window borders
 
 ### Screen Utilities
 - [x] `screen/ScreenTranslator.java` - Screen coordinate translation (implemented as IScreenTranslator.cs)

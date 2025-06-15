@@ -148,8 +148,3 @@ public abstract class AbstractTextGUI : ITextGUI
 
     protected abstract bool HandleInput(KeyStroke key);
 }
-
-public interface ITextGUIThreadFactory
-{
-    ITextGUIThread CreateTextGUIThread(ITextGUI textGUI);
-}
