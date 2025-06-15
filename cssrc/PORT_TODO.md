@@ -5,8 +5,8 @@ This document tracks the comprehensive list of Java classes that need to be port
 ## Summary Statistics
 
 - **Total Java Classes**: 186
-- **Already Ported**: 108 (58.1%)
-- **Remaining to Port**: 78 (41.9%)
+- **Already Ported**: 110 (59.1%)
+- **Remaining to Port**: 76 (40.9%)
 
 ## Priority Levels
 - **HIGH**: Core functionality required for basic operation
@@ -15,7 +15,7 @@ This document tracks the comprehensive list of Java classes that need to be port
 
 ---
 
-## HIGH PRIORITY CLASSES (11 Missing)
+## HIGH PRIORITY CLASSES (0 Missing)
 
 ### Core GUI Infrastructure
 - [x] `gui2/BasicWindow.java` - Basic window implementation (implemented in AbstractWindow.cs)
@@ -25,8 +25,8 @@ This document tracks the comprehensive list of Java classes that need to be port
 - [x] `gui2/WindowPostRenderer.java` - Post-rendering hooks (defined in IWindow.cs)
 
 ### Essential Components
-- [ ] `gui2/ComboBox.java` - Dropdown combo box component
-- [ ] `gui2/SplitPanel.java` - Resizable split panel
+- [x] `gui2/ComboBox.java` - Dropdown combo box component
+- [x] `gui2/SplitPanel.java` - Resizable split panel
 
 ### Graphics Core
 - [x] `graphics/TextImage.java` - Core graphics interface (interface already existed in ITextGraphics.cs)
@@ -175,7 +175,7 @@ This document tracks the comprehensive list of Java classes that need to be port
 | Input | 3 | 15 | 20% |
 | Screen | 8 | 9 | 89% |
 | Terminal | 12 | 46 | 26% |
-| GUI Core | 63 | 65 | 97% |
+| GUI Core | 65 | 65 | 100% |
 | GUI Dialogs | 12 | 12 | 100% |
 | GUI Menu | 3 | 3 | 100% |
 | GUI Table | 9 | 9 | 100% |
@@ -184,9 +184,9 @@ This document tracks the comprehensive list of Java classes that need to be port
 
 Focus on **HIGH PRIORITY** classes first, particularly:
 1. ✅ ~~Complete GUI infrastructure (BasicWindow, WindowBasedTextGUI)~~ **COMPLETED**
-2. Essential components (ComboBox, SplitPanel)  
+2. ✅ ~~Essential components (ComboBox, SplitPanel)~~ **COMPLETED**
 3. Terminal factory and platform abstractions
 4. Core input decoding system
 5. Graphics fundamentals (TextImage, VirtualScreen)
 
-The GUI Core package is now 97% complete! The terminal layer needs the most work (only 26% complete) but is critical for cross-platform support.
+The GUI Core package is now 100% complete! The terminal layer needs the most work (only 26% complete) but is critical for cross-platform support.

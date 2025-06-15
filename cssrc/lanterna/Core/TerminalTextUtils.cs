@@ -18,6 +18,7 @@
  */
 
 using System.Globalization;
+using System.Text;
 
 namespace Lanterna.Core;
 
@@ -120,5 +121,72 @@ public static class TerminalTextUtils
             // Control characters don't add width
         }
         return width;
+    }
+
+    /// <summary>
+    /// Given a string that may or may not contain CJK characters, returns the substring which will fit inside
+    /// availableColumnSpace columns. This method does not handle special cases like tab or new-line.
+    /// Calling this method is the same as calling FitString(str, 0, availableColumnSpace).
+    /// </summary>
+    /// <param name="str">The string to fit inside the availableColumnSpace</param>
+    /// <param name="availableColumnSpace">Number of columns to fit the string inside</param>
+    /// <returns>The whole or part of the input string which will fit inside the supplied availableColumnSpace</returns>
+    public static string FitString(string str, int availableColumnSpace)
+    {
+        return FitString(str, 0, availableColumnSpace);
+    }
+
+    /// <summary>
+    /// Given a string that may or may not contain CJK characters, returns the substring which will fit inside
+    /// availableColumnSpace columns. This method does not handle special cases like tab or new-line.
+    /// <para>
+    /// This overload has a fromColumn parameter that specified where inside the string to start fitting. Please
+    /// notice that fromColumn is not a character index inside the string, but a column index as if the string
+    /// has been printed from the left-most side of the terminal. So if the string is "日本語", fromColumn set to 1 will
+    /// not starting counting from the second character ("本") in the string but from the CJK filler character belonging
+    /// to "日". If you want to count from a particular character index inside the string, please pass in a substring
+    /// and use fromColumn set to 0.
+    /// </para>
+    /// </summary>
+    /// <param name="str">The string to fit inside the availableColumnSpace</param>
+    /// <param name="fromColumn">From what column of the input string to start fitting (see description above!)</param>
+    /// <param name="availableColumnSpace">Number of columns to fit the string inside</param>
+    /// <returns>The whole or part of the input string which will fit inside the supplied availableColumnSpace</returns>
+    public static string FitString(string str, int fromColumn, int availableColumnSpace)
+    {
+        if (availableColumnSpace <= 0)
+        {
+            return "";
+        }
+
+        var result = new StringBuilder();
+        int column = 0;
+        int index = 0;
+        while (index < str.Length && column < fromColumn)
+        {
+            char c = str[index++];
+            column += IsCharCJK(c) ? 2 : 1;
+        }
+        if (column > fromColumn)
+        {
+            result.Append(" ");
+            availableColumnSpace--;
+        }
+
+        while (availableColumnSpace > 0 && index < str.Length)
+        {
+            char c = str[index++];
+            availableColumnSpace -= IsCharCJK(c) ? 2 : 1;
+            if (availableColumnSpace < 0)
+            {
+                result.Append(' ');
+            }
+            else
+            {
+                result.Append(c);
+            }
+        }
+
+        return result.ToString();
     }
 }
