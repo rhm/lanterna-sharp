@@ -5,8 +5,8 @@ This document tracks the comprehensive list of Java classes that need to be port
 ## Summary Statistics
 
 - **Total Java Classes**: 186
-- **Already Ported**: 110 (59.1%)
-- **Remaining to Port**: 76 (40.9%)
+- **Already Ported**: 116 (62.4%)
+- **Remaining to Port**: 70 (37.6%)
 
 ## Priority Levels
 - **HIGH**: Core functionality required for basic operation
@@ -60,7 +60,7 @@ This document tracks the comprehensive list of Java classes that need to be port
 
 ---
 
-## MEDIUM PRIORITY CLASSES (42 Missing)
+## MEDIUM PRIORITY CLASSES (36 Missing)
 
 ### Graphics Utilities
 - [ ] `graphics/AbstractTheme.java` - Base theme implementation
@@ -95,13 +95,13 @@ This document tracks the comprehensive list of Java classes that need to be port
 - [ ] `input/ScreenInfoCharacterPattern.java` - Screen info patterns
 
 ### Terminal Implementations
-- [ ] `terminal/ansi/CygwinTerminal.java` - Cygwin terminal support
-- [ ] `terminal/ansi/TelnetProtocol.java` - Telnet protocol handling
-- [ ] `terminal/ansi/TelnetTerminal.java` - Telnet terminal
-- [ ] `terminal/ansi/TelnetTerminalServer.java` - Telnet server
-- [ ] `terminal/ansi/UnixTerminalSizeQuerier.java` - Unix size query
-- [ ] `terminal/virtual/TextBuffer.java` - Text buffer utilities
-- [ ] `terminal/virtual/VirtualTerminalTextGraphics.java` - Virtual graphics
+- [-] `terminal/ansi/CygwinTerminal.java` - Cygwin terminal support - DON'T DO THIS
+- [x] `terminal/ansi/TelnetProtocol.java` - Telnet protocol handling
+- [x] `terminal/ansi/TelnetTerminal.java` - Telnet terminal
+- [x] `terminal/ansi/TelnetTerminalServer.java` - Telnet server
+- [x] `terminal/ansi/UnixTerminalSizeQuerier.java` - Unix size query
+- [x] `terminal/virtual/TextBuffer.java` - Text buffer utilities
+- [x] `terminal/virtual/VirtualTerminalTextGraphics.java` - Virtual graphics
 
 ### Advanced GUI Features
 - [ ] `gui2/TextGUIThreadFactory.java` - GUI thread factory
@@ -174,7 +174,7 @@ This document tracks the comprehensive list of Java classes that need to be port
 | Graphics | 5 | 17 | 29% |
 | Input | 3 | 15 | 20% |
 | Screen | 8 | 9 | 89% |
-| Terminal | 12 | 46 | 26% |
+| Terminal | 18 | 46 | 39% |
 | GUI Core | 65 | 65 | 100% |
 | GUI Dialogs | 12 | 12 | 100% |
 | GUI Menu | 3 | 3 | 100% |
