@@ -5,8 +5,8 @@ This document tracks the comprehensive list of Java classes that need to be port
 ## Summary Statistics
 
 - **Total Java Classes**: 186
-- **Already Ported**: 145 (78.0%)
-- **Remaining to Port**: 41 (22.0%)
+- **Already Ported**: 148 (79.6%)
+- **Remaining to Port**: 38 (20.4%)
 
 ## Priority Levels
 - **HIGH**: Core functionality required for basic operation
@@ -60,7 +60,7 @@ This document tracks the comprehensive list of Java classes that need to be port
 
 ---
 
-## MEDIUM PRIORITY CLASSES (7 Missing)
+## MEDIUM PRIORITY CLASSES (4 Missing)
 
 ### Graphics Utilities
 - [x] `graphics/AbstractTheme.java` - Base theme implementation (complete hierarchical theme system)
@@ -114,9 +114,9 @@ This document tracks the comprehensive list of Java classes that need to be port
 - [x] `Symbols.java` - Complete Unicode symbols (current C# version now complete)
 
 ### Platform Specific
-- [ ] `terminal/ansi/FixedTerminalSizeProvider.java` - Fixed size provider
-- [ ] `terminal/SimpleTerminalResizeListener.java` - Simple resize handler
-- [ ] `terminal/TerminalFactory.java` - Terminal factory interface
+- [x] `terminal/ansi/FixedTerminalSizeProvider.java` - Fixed size provider
+- [x] `terminal/SimpleTerminalResizeListener.java` - Simple resize handler
+- [x] `terminal/TerminalFactory.java` - Terminal factory interface
 
 ### Theme Infrastructure
 - [x] `graphics/DelegatingTheme.java` - Theme delegation pattern
