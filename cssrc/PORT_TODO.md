@@ -5,8 +5,8 @@ This document tracks the comprehensive list of Java classes that need to be port
 ## Summary Statistics
 
 - **Total Java Classes**: 185 (corrected - DelegatingTextImage doesn't exist)
-- **Already Ported**: 166 (89.7%)
-- **Remaining to Port**: 19 (10.3%)
+- **Already Ported**: 169 (91.4%)
+- **Remaining to Port**: 16 (8.6%)
 
 ## Priority Levels
 - **HIGH**: Core functionality required for basic operation
@@ -126,7 +126,7 @@ This document tracks the comprehensive list of Java classes that need to be port
 
 ---
 
-## LOW PRIORITY CLASSES (19 Missing)
+## LOW PRIORITY CLASSES (16 Missing)
 
 ### Swing/AWT Support (Desktop GUI)
 - [ ] `terminal/swing/AWTTerminalFontConfiguration.java`
@@ -146,9 +146,9 @@ This document tracks the comprehensive list of Java classes that need to be port
 - [ ] `terminal/swing/TerminalPalette.java`
 
 ### Windows Console Support
-- [ ] `terminal/win/WindowsConsoleInputStream.java`
-- [ ] `terminal/win/WindowsConsoleOutputStream.java` 
-- [ ] `terminal/win/WindowsTerminal.java`
+- [x] `terminal/win/WindowsConsoleInputStream.java` - WindowsConsoleInputStream.cs
+- [x] `terminal/win/WindowsConsoleOutputStream.java` - WindowsConsoleOutputStream.cs
+- [x] `terminal/win/WindowsTerminal.java` - WindowsTerminal.cs
 
 ### Test/Debug Utilities
 - [x] `TestTerminalFactory.java` - COMPLETED (TestTerminalFactory.cs with command-line argument parsing)
@@ -174,7 +174,7 @@ This document tracks the comprehensive list of Java classes that need to be port
 | Graphics | 18 | 18 | 100% |
 | Input | 12 | 15 | 80% |
 | Screen | 9 | 9 | 100% |
-| Terminal | 18 | 46 | 39% |
+| Terminal | 21 | 46 | 46% |
 | GUI Core | 65 | 65 | 100% |
 | GUI Dialogs | 12 | 12 | 100% |
 | GUI Menu | 3 | 3 | 100% |
