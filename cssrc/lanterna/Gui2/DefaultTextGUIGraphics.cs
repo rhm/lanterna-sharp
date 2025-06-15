@@ -58,13 +58,15 @@ public class DefaultTextGUIGraphics : ITextGUIGraphics
 
     public ITextGUIGraphics SetBackgroundColor(ITextColor? backgroundColor)
     {
-        _backend.SetBackgroundColor(backgroundColor);
+        if (backgroundColor != null)
+            _backend.SetBackgroundColor(backgroundColor);
         return this;
     }
 
     public ITextGUIGraphics SetForegroundColor(ITextColor? foregroundColor)
     {
-        _backend.SetForegroundColor(foregroundColor);
+        if (foregroundColor != null)
+            _backend.SetForegroundColor(foregroundColor);
         return this;
     }
 

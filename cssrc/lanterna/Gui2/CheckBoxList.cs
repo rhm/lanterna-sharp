@@ -367,14 +367,14 @@ public class CheckBoxList<V> : AbstractListBox<V, CheckBoxList<V>>
             return 1; // Position cursor on the checkbox marker
         }
 
-        public override string GetLabel(CheckBoxList<T> listBox, int index, T item)
+        public override string GetLabel(CheckBoxList<T> listBox, int index, T? item)
         {
             string check = listBox.IsChecked(index) ? "x" : " ";
             string text = item?.ToString() ?? "";
             return $"[{check}] {text}";
         }
 
-        public override void DrawItem(ITextGUIGraphics graphics, CheckBoxList<T> listBox, int index, T item, 
+        public override void DrawItem(ITextGUIGraphics graphics, CheckBoxList<T> listBox, int index, T? item, 
                             bool selected, bool focused)
         {
             if (graphics.Size.Rows == 0 || graphics.Size.Columns < 4)

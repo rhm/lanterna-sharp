@@ -14,7 +14,7 @@ public abstract class AbstractListBox<V, T> : AbstractInteractableComponent<T>
 {
     private readonly List<V> _items;
     private int _selectedIndex;
-    private ListItemRenderer<V, T> _listItemRenderer;
+    private ListItemRenderer<V, T> _listItemRenderer = null!; // Initialized in constructor
     protected TerminalPosition _scrollOffset = new TerminalPosition(0, 0);
     private readonly object _lock = new object();
 
@@ -544,7 +544,8 @@ public abstract class AbstractListBox<V, T> : AbstractInteractableComponent<T>
             graphics.ApplyThemeStyle(themeDefinition.Normal);
             if (items.Count > componentHeight)
             {
-                _verticalScrollBar.OnAdded(listBox.Parent);
+                if (listBox.Parent != null)
+                    _verticalScrollBar.OnAdded(listBox.Parent);
                 _verticalScrollBar.SetViewSize(componentHeight);
                 _verticalScrollBar.SetScrollMaximum(items.Count);
                 _verticalScrollBar.SetScrollPosition(_scrollTopIndex);

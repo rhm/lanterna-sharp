@@ -139,7 +139,7 @@ public class DefaultTableRenderer<V> : ITableRenderer<V>
             for (int columnIndex = 0; columnIndex < row.Count && columnIndex < _preferredColumnSizes.Count; columnIndex++)
             {
                 var cell = row[columnIndex];
-                var cellSize = tableCellRenderer.GetPreferredSize(table, cell, columnIndex, rowIndex);
+                var cellSize = cell != null ? tableCellRenderer.GetPreferredSize(table, cell, columnIndex, rowIndex) : TerminalSize.Zero;
                 
                 // Update column width
                 if (_preferredColumnSizes[columnIndex] < cellSize.Columns)
@@ -390,7 +390,10 @@ public class DefaultTableRenderer<V> : ITableRenderer<V>
                 new TerminalPosition(leftPosition, topPosition),
                 new TerminalSize(columnWidth, rowHeight));
             
-            tableCellRenderer.DrawCell(table, cell, columnIndex, rowIndex, cellGraphics);
+            if (cell != null)
+            {
+                tableCellRenderer.DrawCell(table, cell, columnIndex, rowIndex, cellGraphics);
+            }
             leftPosition += columnWidth;
             
             // Draw vertical cell border

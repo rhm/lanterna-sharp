@@ -298,7 +298,7 @@ public class Panel : AbstractComponent<Panel>, IContainer, IPanel
 
                 if (component is IContainer containerComp)
                 {
-                    if (fromThis.IsInside(containerComp))
+                    if (fromThis != null && fromThis.IsInside(containerComp))
                     {
                         var next = containerComp.NextFocus(fromThis);
                         if (next == null)
@@ -359,7 +359,7 @@ public class Panel : AbstractComponent<Panel>, IContainer, IPanel
 
             if (component is IContainer containerComp)
             {
-                if (fromThis!.IsInside(containerComp))
+                if (fromThis != null && fromThis.IsInside(containerComp))
                 {
                     var next = containerComp.PreviousFocus(fromThis);
                     if (next == null)

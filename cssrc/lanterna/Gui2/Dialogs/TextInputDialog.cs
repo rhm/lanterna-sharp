@@ -42,7 +42,7 @@ public class TextInputDialog : DialogWindow
         bool password) : base(title)
     {
         _result = null;
-        _textBox = new TextBox(textBoxPreferredSize, initialContent);
+        _textBox = new TextBox(textBoxPreferredSize, initialContent ?? "");
         _validator = validator;
 
         if (password)
@@ -91,7 +91,10 @@ public class TextInputDialog : DialogWindow
             string? errorMessage = _validator.Validate(text);
             if (errorMessage != null)
             {
-                MessageDialog.ShowMessageDialog((IWindowBasedTextGUI)TextGUI!, Title, errorMessage, MessageDialogButton.OK);
+                if (TextGUI != null)
+                {
+                    MessageDialog.ShowMessageDialog((IWindowBasedTextGUI)TextGUI, Title, errorMessage, MessageDialogButton.OK);
+                }
                 return;
             }
         }

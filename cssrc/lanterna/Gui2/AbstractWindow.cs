@@ -43,7 +43,7 @@ public abstract class AbstractWindow : AbstractBasePane<IWindow>, IWindow
         _closeWindowWithEscape = closeWindowWithEscape;
     }
 
-    public virtual void SetTextGUI(IWindowBasedTextGUI textGUI)
+    public virtual void SetTextGUI(IWindowBasedTextGUI? textGUI)
     {
         if (_textGUI != null && textGUI != null)
         {

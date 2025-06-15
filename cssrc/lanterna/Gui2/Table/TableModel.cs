@@ -240,7 +240,7 @@ public class TableModel<V>
             _rows.RemoveAt(index);
             foreach (var listener in _listeners)
             {
-                listener.OnRowRemoved(this, index, removedRow);
+                listener.OnRowRemoved(this, index, removedRow.OfType<V>().ToList());
             }
         }
         return this;
@@ -362,7 +362,7 @@ public class TableModel<V>
             }
             foreach (var listener in _listeners)
             {
-                listener.OnColumnRemoved(this, index, removedColumnHeader, removedColumn);
+                listener.OnColumnRemoved(this, index, removedColumnHeader, removedColumn.OfType<V>().ToList());
             }
         }
         return this;

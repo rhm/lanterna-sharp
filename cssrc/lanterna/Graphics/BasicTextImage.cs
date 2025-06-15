@@ -68,8 +68,6 @@ public class BasicTextImage : ITextImage
     /// <param name="initialContent">Filler character to use if the source array is smaller than the requested size</param>
     private BasicTextImage(TerminalSize size, TextCharacter?[][] toCopy, TextCharacter initialContent)
     {
-        if (size == null)
-            throw new ArgumentNullException(nameof(size), "Cannot create BasicTextImage with null size");
         if (toCopy == null)
             throw new ArgumentNullException(nameof(toCopy), "Cannot create BasicTextImage with null toCopy");
         if (initialContent == null)
@@ -113,8 +111,6 @@ public class BasicTextImage : ITextImage
 
     public ITextImage Resize(TerminalSize newSize, TextCharacter filler)
     {
-        if (newSize == null)
-            throw new ArgumentNullException(nameof(newSize), "Cannot resize BasicTextImage with null newSize");
         if (filler == null)
             throw new ArgumentNullException(nameof(filler), "Cannot resize BasicTextImage with null filler");
 
@@ -129,8 +125,6 @@ public class BasicTextImage : ITextImage
 
     public void SetCharacterAt(TerminalPosition position, TextCharacter character)
     {
-        if (position == null)
-            throw new ArgumentNullException(nameof(position), "Cannot call BasicTextImage.SetCharacterAt(..) with null position");
         
         SetCharacterAt(position.Column, position.Row, character);
     }
@@ -163,8 +157,6 @@ public class BasicTextImage : ITextImage
 
     public TextCharacter? GetCharacterAt(TerminalPosition position)
     {
-        if (position == null)
-            throw new ArgumentNullException(nameof(position), "Cannot call BasicTextImage.GetCharacterAt(..) with null position");
         
         return GetCharacterAt(position.Column, position.Row);
     }
@@ -359,7 +351,7 @@ public class BasicTextImage : ITextImage
         {
             foreach (var tc in line)
             {
-                sb.Append(tc?.Character ?? ' ');
+                sb.Append(tc?.CharacterString.Length > 0 ? tc.CharacterString[0] : ' ');
             }
             sb.Append('\n');
         }

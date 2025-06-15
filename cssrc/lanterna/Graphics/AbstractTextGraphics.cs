@@ -212,7 +212,7 @@ public abstract class AbstractTextGraphics : ITextGraphics
 
     public virtual ITextGraphics DrawLine(TerminalPosition fromPoint, TerminalPosition toPoint, TextCharacter character)
     {
-        return DrawLine(fromPoint, toPoint, character.Character);
+        return DrawLine(fromPoint, toPoint, character.CharacterString.Length > 0 ? character.CharacterString[0] : ' ');
     }
 
     public virtual ITextGraphics DrawLine(int fromX, int fromY, int toX, int toY, char character)
@@ -222,7 +222,7 @@ public abstract class AbstractTextGraphics : ITextGraphics
 
     public virtual ITextGraphics DrawLine(int fromX, int fromY, int toX, int toY, TextCharacter character)
     {
-        return DrawLine(fromX, fromY, toX, toY, character.Character);
+        return DrawLine(fromX, fromY, toX, toY, character.CharacterString.Length > 0 ? character.CharacterString[0] : ' ');
     }
 
     public virtual ITextGraphics DrawTriangle(TerminalPosition p1, TerminalPosition p2, TerminalPosition p3, char character)
@@ -233,7 +233,7 @@ public abstract class AbstractTextGraphics : ITextGraphics
 
     public virtual ITextGraphics DrawTriangle(TerminalPosition p1, TerminalPosition p2, TerminalPosition p3, TextCharacter character)
     {
-        return DrawTriangle(p1, p2, p3, character.Character);
+        return DrawTriangle(p1, p2, p3, character.CharacterString.Length > 0 ? character.CharacterString[0] : ' ');
     }
 
     public virtual ITextGraphics FillTriangle(TerminalPosition p1, TerminalPosition p2, TerminalPosition p3, char character)
@@ -244,7 +244,7 @@ public abstract class AbstractTextGraphics : ITextGraphics
 
     public virtual ITextGraphics FillTriangle(TerminalPosition p1, TerminalPosition p2, TerminalPosition p3, TextCharacter character)
     {
-        return FillTriangle(p1, p2, p3, character.Character);
+        return FillTriangle(p1, p2, p3, character.CharacterString.Length > 0 ? character.CharacterString[0] : ' ');
     }
 
     public virtual ITextGraphics DrawImage(TerminalPosition topLeft, ITextImage image)

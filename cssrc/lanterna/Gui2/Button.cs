@@ -13,7 +13,7 @@ public class Button : AbstractInteractableComponent<Button>
     }
 
     private readonly ConcurrentBag<IListener> _listeners;
-    private string _label;
+    private string _label = null!; // Initialized in constructor
 
     public Button(string label)
     {

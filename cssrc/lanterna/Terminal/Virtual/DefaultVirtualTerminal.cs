@@ -446,7 +446,7 @@ public class DefaultVirtualTerminal : AbstractTerminal, IVirtualTerminal
 
     private void PutCharacter(TextCharacter terminalCharacter)
     {
-        if (terminalCharacter.Character == '\t')
+        if (terminalCharacter.CharacterString == "\t")
         {
             int nrOfSpaces = TabBehaviour.AlignToColumn4.GetTabReplacement(_cursorPosition.Column).Length;
             for (int i = 0; i < nrOfSpaces && _cursorPosition.Column < _terminalSize.Columns - 1; i++)

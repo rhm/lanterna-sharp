@@ -33,7 +33,7 @@ public interface IWindow : IBasePane
 
         public override string ToString()
         {
-            return !string.IsNullOrEmpty(_info) ? _info : base.ToString();
+            return !string.IsNullOrEmpty(_info) ? _info : (base.ToString() ?? "Hint");
         }
     }
 

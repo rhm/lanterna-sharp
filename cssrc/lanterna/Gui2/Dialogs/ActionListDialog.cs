@@ -37,7 +37,7 @@ public class ActionListDialog : DialogWindow
         foreach (var action in actions)
         {
             var capturedAction = action; // Capture for closure
-            listBox.AddItem(action.ToString(), () =>
+            listBox.AddItem(action.ToString() ?? "Action", () =>
             {
                 capturedAction();
                 if (closeAutomatically)
