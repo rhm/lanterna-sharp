@@ -5,8 +5,8 @@ This document tracks the comprehensive list of Java classes that need to be port
 ## Summary Statistics
 
 - **Total Java Classes**: 186
-- **Already Ported**: 137 (73.7%)
-- **Remaining to Port**: 49 (26.3%)
+- **Already Ported**: 141 (75.8%)
+- **Remaining to Port**: 45 (24.2%)
 
 ## Priority Levels
 - **HIGH**: Core functionality required for basic operation
@@ -60,7 +60,7 @@ This document tracks the comprehensive list of Java classes that need to be port
 
 ---
 
-## MEDIUM PRIORITY CLASSES (15 Missing)
+## MEDIUM PRIORITY CLASSES (11 Missing)
 
 ### Graphics Utilities
 - [x] `graphics/AbstractTheme.java` - Base theme implementation (complete hierarchical theme system)
@@ -78,10 +78,10 @@ This document tracks the comprehensive list of Java classes that need to be port
 - [x] `graphics/NullTextGraphics.java` - Null object pattern
 
 ### Theme System
-- [ ] `bundle/BundleLocator.java` - Resource bundle localization
-- [ ] `bundle/DefaultTheme.java` - Default theme implementation  
-- [ ] `bundle/LanternaThemes.java` - Theme management utilities
-- [ ] `bundle/LocalizedUIBundle.java` - Localized UI strings
+- [x] `bundle/BundleLocator.java` - Resource bundle localization
+- [x] `bundle/DefaultTheme.java` - Default theme implementation  
+- [x] `bundle/LanternaThemes.java` - Theme management utilities
+- [x] `bundle/LocalizedUIBundle.java` - Localized UI strings
 
 ### Advanced Input Patterns
 - [x] `input/AltAndCharacterPattern.java` - Alt+key combinations
@@ -170,7 +170,7 @@ This document tracks the comprehensive list of Java classes that need to be port
 | Package | Ported | Total | Completion |
 |---------|--------|-------|------------|
 | Core | 9 | 9 | 100% |
-| Bundle | 0 | 4 | 0% |
+| Bundle | 4 | 4 | 100% |
 | Graphics | 15 | 17 | 88% |
 | Input | 12 | 15 | 80% |
 | Screen | 9 | 9 | 100% |
