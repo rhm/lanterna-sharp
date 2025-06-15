@@ -4,9 +4,9 @@ This document tracks the comprehensive list of Java classes that need to be port
 
 ## Summary Statistics
 
-- **Total Java Classes**: 186
-- **Already Ported**: 151 (81.2%)
-- **Remaining to Port**: 35 (18.8%)
+- **Total Java Classes**: 185 (corrected - DelegatingTextImage doesn't exist)
+- **Already Ported**: 152 (82.2%)
+- **Remaining to Port**: 33 (17.8%)
 
 ## Priority Levels
 - **HIGH**: Core functionality required for basic operation
@@ -126,7 +126,7 @@ This document tracks the comprehensive list of Java classes that need to be port
 
 ---
 
-## LOW PRIORITY CLASSES (25 Missing)
+## LOW PRIORITY CLASSES (23 Missing)
 
 ### Swing/AWT Support (Desktop GUI)
 - [ ] `terminal/swing/AWTTerminalFontConfiguration.java`
@@ -155,8 +155,8 @@ This document tracks the comprehensive list of Java classes that need to be port
 - [ ] `input/ScreenInfoActionType.java`
 
 ### Advanced Graphics
-- [ ] `graphics/DelegatingTextImage.java`
-- [ ] `graphics/BasicTextImage.java`
+- [x] `graphics/DelegatingTextImage.java` - DOESN'T EXIST IN JAVA CODEBASE
+- [x] `graphics/BasicTextImage.java` - COMPLETED (already fully ported)
 
 ### Platform Detection
 - [ ] `terminal/DetachedTerminal.java`
