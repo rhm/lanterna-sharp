@@ -269,7 +269,7 @@ public abstract class AbstractTheme : ITheme
 
         public bool GetBooleanProperty(string name, bool defaultValue)
         {
-            if (node.propertyMap.TryGetValue(name, out string propertyValue))
+            if (node.propertyMap.TryGetValue(name, out string? propertyValue))
             {
                 return bool.Parse(propertyValue);
             }

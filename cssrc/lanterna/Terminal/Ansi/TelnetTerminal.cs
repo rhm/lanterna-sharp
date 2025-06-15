@@ -59,7 +59,7 @@ namespace Lanterna.Terminal.Ansi
         /// Returns the socket address for the remote endpoint of the telnet connection
         /// </summary>
         /// <returns>EndPoint representing the remote client</returns>
-        public System.Net.EndPoint GetRemoteSocketAddress()
+        public System.Net.EndPoint? GetRemoteSocketAddress()
         {
             return _socket.RemoteEndPoint;
         }
@@ -227,7 +227,7 @@ namespace Lanterna.Terminal.Ansi
             private readonly byte[] _buffer;
             private readonly byte[] _workingBuffer;
             private int _bytesInBuffer;
-            private TelnetClientEventListener _eventListener;
+            private TelnetClientEventListener? _eventListener;
             private readonly Socket _socket;
 
             public NegotiationState NegotiationState => _negotiationState;

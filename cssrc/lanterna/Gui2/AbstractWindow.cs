@@ -14,7 +14,7 @@ public abstract class AbstractWindow : AbstractBasePane<IWindow>, IWindow
     private TerminalPosition? _lastKnownPosition;
     private TerminalPosition _contentOffset;
     private readonly HashSet<IWindow.Hint> _hints;
-    private IWindowPostRenderer? _windowPostRenderer;
+    private IWindowPostRenderer? _windowPostRenderer = null;
     private bool _closeWindowWithEscape;
     private readonly ConcurrentBag<IWindowListener> _windowListeners;
     private readonly object _lock = new object();

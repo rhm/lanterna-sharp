@@ -36,7 +36,6 @@ public class TextBox : AbstractInteractableComponent<TextBox>
 
     private readonly List<string> _lines;
     private readonly Style _style;
-    private readonly int _maxLineLength;
     
     private TerminalPosition _caretPosition;
     private bool _caretWarp;
@@ -85,7 +84,6 @@ public class TextBox : AbstractInteractableComponent<TextBox>
     {
         _lines = new List<string>();
         _style = style;
-        _maxLineLength = -1; // Unlimited by default
         _caretPosition = TerminalPosition.TopLeftCorner;
         _caretWarp = false;
         _readOnly = false;

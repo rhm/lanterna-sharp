@@ -80,7 +80,7 @@ namespace Lanterna.Terminal.Ansi
                 try
                 {
                     string namePart = field.Name.Substring(field.Name.IndexOf("_") + 1);
-                    result[namePart] = (byte)field.GetValue(null);
+                    result[namePart] = (byte)(field.GetValue(null) ?? 0);
                 }
                 catch (Exception)
                 {
