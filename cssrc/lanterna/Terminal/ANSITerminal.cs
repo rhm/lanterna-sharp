@@ -36,6 +36,11 @@ public abstract class ANSITerminal : AbstractTerminal
     private readonly Queue<KeyStroke> _inputQueue;
     private readonly object _inputLock = new();
 
+    /// <summary>
+    /// Returns true if the terminal is currently in private mode
+    /// </summary>
+    public bool IsInPrivateMode => _inPrivateMode;
+
     protected ANSITerminal(Stream terminalInput, Stream terminalOutput, Encoding? terminalEncoding = null)
     {
         TerminalInput = terminalInput ?? throw new ArgumentNullException(nameof(terminalInput));
