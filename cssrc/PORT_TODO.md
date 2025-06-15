@@ -5,8 +5,8 @@ This document tracks the comprehensive list of Java classes that need to be port
 ## Summary Statistics
 
 - **Total Java Classes**: 185 (corrected - DelegatingTextImage doesn't exist)
-- **Already Ported**: 165 (89.2%)
-- **Remaining to Port**: 20 (10.8%)
+- **Already Ported**: 166 (89.7%)
+- **Remaining to Port**: 19 (10.3%)
 
 ## Priority Levels
 - **HIGH**: Core functionality required for basic operation
@@ -126,7 +126,7 @@ This document tracks the comprehensive list of Java classes that need to be port
 
 ---
 
-## LOW PRIORITY CLASSES (20 Missing)
+## LOW PRIORITY CLASSES (19 Missing)
 
 ### Swing/AWT Support (Desktop GUI)
 - [ ] `terminal/swing/AWTTerminalFontConfiguration.java`
@@ -151,8 +151,8 @@ This document tracks the comprehensive list of Java classes that need to be port
 - [ ] `terminal/win/WindowsTerminal.java`
 
 ### Test/Debug Utilities
-- [ ] `TestTerminalFactory.java`
-- [ ] `input/ScreenInfoActionType.java`
+- [x] `TestTerminalFactory.java` - COMPLETED (TestTerminalFactory.cs with command-line argument parsing)
+- [x] `input/ScreenInfoActionType.java` - DOESN'T EXIST IN JAVA CODEBASE
 
 ### Advanced Graphics
 - [x] `graphics/DelegatingTextImage.java` - DOESN'T EXIST IN JAVA CODEBASE
