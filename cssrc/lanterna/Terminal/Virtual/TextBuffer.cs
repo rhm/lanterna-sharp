@@ -129,7 +129,7 @@ internal class TextBuffer
                 }
                 returnStyle = 1; // this character and the one to the right
             }
-            else if (line[columnIndex].Equals(DoubleWidthCharPadding) && columnIndex > 0)
+            else if (ReferenceEquals(line[columnIndex], DoubleWidthCharPadding) && columnIndex > 0)
             {
                 line[columnIndex - 1] = TextCharacter.DefaultCharacter;
                 returnStyle = 2; // this character and the one to the left
@@ -168,7 +168,7 @@ internal class TextBuffer
             }
             
             TextCharacter textCharacter = line[columnIndex];
-            if (textCharacter.Equals(DoubleWidthCharPadding) && columnIndex > 0)
+            if (ReferenceEquals(textCharacter, DoubleWidthCharPadding) && columnIndex > 0)
             {
                 return line[columnIndex - 1];
             }

@@ -149,10 +149,8 @@ public class DefaultVirtualTerminal : AbstractTerminal, IVirtualTerminal
     {
         lock (this)
         {
-            if (_terminalSize.Rows < GetBufferLineCount())
-            {
-                cursorPosition = cursorPosition.WithRelativeRow(GetBufferLineCount() - _terminalSize.Rows);
-            }
+            // The buffer should grow automatically when writing to a position
+            // Don't adjust the cursor position based on buffer size here
             _cursorPosition = cursorPosition;
             CorrectCursor();
         }
