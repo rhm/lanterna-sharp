@@ -29,7 +29,7 @@ public interface IComponent : ITextGUIElement
     
     Theme Theme { get; }
     
-    ThemeDefinition ThemeDefinition { get; }
+    IThemeDefinition ThemeDefinition { get; }
     
     IComponent SetTheme(Theme? theme);
     

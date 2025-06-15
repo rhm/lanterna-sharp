@@ -660,7 +660,7 @@ public class ComboBox<T> : AbstractInteractableComponent<ComboBox<T>>
         {
             if (comboBox.IsDropDownFocused)
             {
-                if (comboBox.ThemeDefinition.CursorVisible)
+                if (comboBox.ThemeDefinition.IsCursorVisible())
                 {
                     return new TerminalPosition(comboBox.Size.Columns - 1, 0);
                 }
@@ -782,7 +782,7 @@ public class ComboBox<T> : AbstractInteractableComponent<ComboBox<T>>
             _parentComboBox._popupWindow = null;
         }
 
-        public ThemeDefinition ThemeDefinition => _parentComboBox.ThemeDefinition;
+        public IThemeDefinition ThemeDefinition => _parentComboBox.ThemeDefinition;
 
         public override bool HandleInput(KeyStroke keyStroke)
         {

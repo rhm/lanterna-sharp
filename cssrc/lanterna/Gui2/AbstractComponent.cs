@@ -279,7 +279,7 @@ public abstract class AbstractComponent<T> : IComponent where T : class, ICompon
         }
     }
 
-    public virtual ThemeDefinition ThemeDefinition => Theme.GetDefinition(GetType());
+    public virtual IThemeDefinition ThemeDefinition => Theme.GetDefinition(GetType());
 
     public IComponent SetTheme(Theme? theme)
     {

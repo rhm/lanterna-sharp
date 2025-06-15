@@ -133,7 +133,7 @@ public class Button : AbstractInteractableComponent<Button>
     {
         public TerminalPosition? GetCursorLocation(Button button)
         {
-            if (button.ThemeDefinition.CursorVisible)
+            if (button.ThemeDefinition.IsCursorVisible())
             {
                 return new TerminalPosition(1 + GetLabelShift(button, button.Size), 0);
             }

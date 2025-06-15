@@ -464,7 +464,7 @@ public abstract class AbstractListBox<V, T> : AbstractInteractableComponent<T>
 
         public TerminalPosition? GetCursorLocation(TType listBox)
         {
-            if (!listBox.ThemeDefinition.CursorVisible)
+            if (!listBox.ThemeDefinition.IsCursorVisible())
             {
                 return null;
             }

@@ -176,7 +176,7 @@ public class CheckBox : AbstractInteractableComponent<CheckBox>
 
         public override TerminalPosition? GetCursorLocation(CheckBox component)
         {
-            if (component.ThemeDefinition.CursorVisible)
+            if (component.ThemeDefinition.IsCursorVisible())
             {
                 return CursorLocation;
             }

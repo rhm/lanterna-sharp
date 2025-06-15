@@ -387,7 +387,7 @@ public abstract class AbstractBasePane<T> : IBasePane where T : IBasePane
         public bool HasParent(IContainer parent) => false;
         public ITextGUI? TextGUI => _basePane.TextGUI;
         public Theme Theme => _basePane.Theme;
-        public ThemeDefinition ThemeDefinition => Theme.GetDefinition(GetType());
+        public IThemeDefinition ThemeDefinition => Theme.GetDefinition(GetType());
         public IComponent SetTheme(Theme? theme) { _basePane.SetTheme(theme); return this; }
         public bool IsInside(IContainer container) => false;
         public IComponentRenderer<IComponent> Renderer => throw new NotImplementedException();
