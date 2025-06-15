@@ -350,6 +350,6 @@ public class TextCharacter : IEquatable<TextCharacter>
 
     public override string ToString()
     {
-        return $"TextCharacter{{character={_character}, foregroundColor={_foregroundColor}, backgroundColor={_backgroundColor}, modifiers=[{string.Join(", ", _modifiers)}]}}";
+        return _character;
     }
 }

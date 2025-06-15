@@ -490,7 +490,7 @@ public class DefaultVirtualTerminal : AbstractTerminal, IVirtualTerminal
 
             // Advance cursor
             _cursorPosition = _cursorPosition.WithRelativeColumn(doubleWidth ? 2 : 1);
-            if (_cursorPosition.Column > _terminalSize.Columns)
+            if (_cursorPosition.Column >= _terminalSize.Columns)
             {
                 MoveCursorToNextLine();
             }

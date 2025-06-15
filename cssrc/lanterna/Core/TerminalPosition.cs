@@ -207,7 +207,7 @@ public readonly struct TerminalPosition : IComparable<TerminalPosition>, IEquata
 
     public override string ToString()
     {
-        return $"[{Column}:{Row}]";
+        return $"TerminalPosition{{column={Column}, row={Row}}}";
     }
 
     public override int GetHashCode()

@@ -174,7 +174,7 @@ public readonly struct TerminalSize : IEquatable<TerminalSize>
 
     public override string ToString()
     {
-        return $"{{{Columns}x{Rows}}}";
+        return $"TerminalSize{{columns={Columns}, rows={Rows}}}";
     }
 
     public bool Equals(TerminalSize other)
