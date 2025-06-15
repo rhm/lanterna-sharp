@@ -5,8 +5,8 @@ This document tracks the comprehensive list of Java classes that need to be port
 ## Summary Statistics
 
 - **Total Java Classes**: 186
-- **Already Ported**: 92 (49.5%)
-- **Remaining to Port**: 94 (50.5%)
+- **Already Ported**: 100 (53.8%)
+- **Remaining to Port**: 86 (46.2%)
 
 ## Priority Levels
 - **HIGH**: Core functionality required for basic operation
@@ -15,7 +15,7 @@ This document tracks the comprehensive list of Java classes that need to be port
 
 ---
 
-## HIGH PRIORITY CLASSES (26 Missing)
+## HIGH PRIORITY CLASSES (18 Missing)
 
 ### Core GUI Infrastructure
 - [ ] `gui2/BasicWindow.java` - Basic window implementation
@@ -33,30 +33,30 @@ This document tracks the comprehensive list of Java classes that need to be port
 - [ ] `screen/VirtualScreen.java` - Virtual screen implementation
 
 ### Terminal Infrastructure  
-- [ ] `terminal/DefaultTerminalFactory.java` - Auto-detection terminal factory
-- [ ] `terminal/TerminalTextGraphics.java` - Terminal-based text graphics
-- [ ] `terminal/ExtendedTerminal.java` - Extended terminal interface
-- [ ] `terminal/IOSafeTerminal.java` - IO-safe terminal interface
-- [ ] `terminal/IOSafeExtendedTerminal.java` - IO-safe extended terminal
-- [ ] `terminal/IOSafeTerminalAdapter.java` - IO-safe adapter
+- [x] `terminal/DefaultTerminalFactory.java` - Auto-detection terminal factory
+- [x] `terminal/TerminalTextGraphics.java` - Terminal-based text graphics
+- [x] `terminal/ExtendedTerminal.java` - Extended terminal interface
+- [x] `terminal/IOSafeTerminal.java` - IO-safe terminal interface
+- [x] `terminal/IOSafeExtendedTerminal.java` - IO-safe extended terminal
+- [x] `terminal/IOSafeTerminalAdapter.java` - IO-safe adapter
 
 ### Platform Support
-- [ ] `terminal/ansi/UnixLikeTTYTerminal.java` - Unix TTY terminal
-- [ ] `terminal/ansi/StreamBasedTerminal.java` - Stream-based terminal base
-- [ ] `terminal/virtual/DefaultVirtualTerminal.java` - Virtual terminal implementation
-- [ ] `terminal/virtual/VirtualTerminal.java` - Virtual terminal interface
-- [ ] `terminal/virtual/VirtualTerminalListener.java` - Virtual terminal events
+- [x] `terminal/ansi/UnixLikeTTYTerminal.java` - Unix TTY terminal
+- [x] `terminal/ansi/StreamBasedTerminal.java` - Stream-based terminal base
+- [x] `terminal/virtual/DefaultVirtualTerminal.java` - Virtual terminal implementation
+- [x] `terminal/virtual/VirtualTerminal.java` - Virtual terminal interface
+- [x] `terminal/virtual/VirtualTerminalListener.java` - Virtual terminal events
 
 ### Input System Core
-- [ ] `input/InputDecoder.java` - Input sequence decoder
-- [ ] `input/KeyDecodingProfile.java` - Key decoding configuration
-- [ ] `input/DefaultKeyDecodingProfile.java` - Default key decoding
-- [ ] `input/CharacterPattern.java` - Input pattern matching interface
+- [x] `input/InputDecoder.java` - Input sequence decoder
+- [x] `input/KeyDecodingProfile.java` - Key decoding configuration
+- [x] `input/DefaultKeyDecodingProfile.java` - Default key decoding
+- [x] `input/CharacterPattern.java` - Input pattern matching interface
 
 ### Essential Enums
-- [ ] `screen/WrapBehaviour.java` - Text wrapping behavior enum
-- [ ] `terminal/MouseCaptureMode.java` - Mouse capture configuration
-- [ ] `input/MouseActionType.java` - Mouse action types
+- [x] `screen/WrapBehaviour.java` - Text wrapping behavior enum
+- [x] `terminal/MouseCaptureMode.java` - Mouse capture configuration
+- [x] `input/MouseActionType.java` - Mouse action types
 
 ---
 
@@ -174,7 +174,7 @@ This document tracks the comprehensive list of Java classes that need to be port
 | Graphics | 4 | 17 | 23% |
 | Input | 3 | 15 | 20% |
 | Screen | 7 | 9 | 78% |
-| Terminal | 4 | 46 | 9% |
+| Terminal | 12 | 46 | 26% |
 | GUI Core | 58 | 65 | 89% |
 | GUI Dialogs | 12 | 12 | 100% |
 | GUI Menu | 3 | 3 | 100% |
