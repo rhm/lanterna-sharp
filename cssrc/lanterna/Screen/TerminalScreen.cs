@@ -112,6 +112,15 @@ public class TerminalScreen : AbstractScreen
             // Check if we need to resize first
             DoResizeIfNecessary();
 
+            // Check if underlying virtual terminal needs a complete refresh and reset the flag
+            if (_terminal is IVirtualTerminal virtualTerminal)
+            {
+                if (virtualTerminal.IsWholeBufferDirtyThenReset())
+                {
+                    _fullRedrawHint = true;
+                }
+            }
+
             switch (refreshType)
             {
                 case RefreshType.Complete:
@@ -149,8 +158,13 @@ public class TerminalScreen : AbstractScreen
     {
         var terminalSize = GetTerminalSize();
         
-        // Clear the terminal and reset colors
-        _terminal.ClearScreen();
+        // Mark start of refresh operation to prevent dirty cell overflow
+        if (_terminal is IVirtualTerminal virtualTerminal)
+        {
+            virtualTerminal.BeginRefreshOperation();
+        }
+
+        // Reset colors but don't clear the terminal buffer
         _terminal.ResetColorAndSGR();
         _terminal.SetCursorPosition(0, 0);
 
@@ -168,6 +182,12 @@ public class TerminalScreen : AbstractScreen
             }
         }
 
+        // Mark end of refresh operation
+        if (_terminal is IVirtualTerminal virtualTerminal2)
+        {
+            virtualTerminal2.EndRefreshOperation();
+        }
+
         _fullRedrawHint = false;
     }
 
@@ -179,6 +199,12 @@ public class TerminalScreen : AbstractScreen
         var terminalSize = GetTerminalSize();
         var lastDrawnCharacter = DefaultCharacter;
         var lastPosition = new TerminalPosition(-1, -1);
+
+        // Mark start of refresh operation to prevent dirty cell overflow
+        if (_terminal is IVirtualTerminal virtualTerminal)
+        {
+            virtualTerminal.BeginRefreshOperation();
+        }
 
         for (int row = 0; row < terminalSize.Rows; row++)
         {
@@ -206,6 +232,12 @@ public class TerminalScreen : AbstractScreen
                     lastPosition = currentPosition;
                 }
             }
+        }
+
+        // Mark end of refresh operation
+        if (_terminal is IVirtualTerminal virtualTerminal2)
+        {
+            virtualTerminal2.EndRefreshOperation();
         }
     }
 

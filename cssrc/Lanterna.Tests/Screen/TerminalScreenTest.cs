@@ -63,12 +63,13 @@ public class TerminalScreenTest
         screen.SetCharacter(10, 10, TextCharacter.FromCharacter('B')[0]);
         screen.SetCharacter(15, 15, TextCharacter.FromCharacter('C')[0]);
         
-        var dirtyCells = virtualTerminal.GetDirtyCells();
+        // Dirty cells should be populated AFTER refresh, not before
+        screen.Refresh();
+        
+        var dirtyCells = virtualTerminal.GetAndResetDirtyCells();
         Assert.Contains(new TerminalPosition(5, 5), dirtyCells);
         Assert.Contains(new TerminalPosition(10, 10), dirtyCells);
         Assert.Contains(new TerminalPosition(15, 15), dirtyCells);
-        
-        screen.Refresh();
         
         Assert.Equal('A', virtualTerminal.GetCharacter(5, 5).CharacterString[0]);
         Assert.Equal('B', virtualTerminal.GetCharacter(10, 10).CharacterString[0]);

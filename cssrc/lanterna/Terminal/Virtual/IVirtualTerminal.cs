@@ -137,6 +137,45 @@ public interface IVirtualTerminal : ITerminal
     void ForEachLine(int startRow, int endRow, IBufferWalker bufferWalker);
 
     /// <summary>
+    /// Returns a set of terminal positions that have been changed since the last time this method was called. 
+    /// These positions represent cells that have been modified and may need to be redrawn.
+    /// </summary>
+    /// <returns>Set of positions that are marked as dirty</returns>
+    SortedSet<TerminalPosition> GetDirtyCells();
+
+    /// <summary>
+    /// Returns a set of terminal positions that have been changed since the last time this method was called and then
+    /// clears the dirty set. These positions represent cells that have been modified and may need to be redrawn.
+    /// </summary>
+    /// <returns>Set of positions that were marked as dirty</returns>
+    SortedSet<TerminalPosition> GetAndResetDirtyCells();
+
+    /// <summary>
+    /// Returns true if the entire buffer is considered dirty and needs a complete refresh, then resets this flag to false.
+    /// This typically happens after operations like clearing the screen or switching modes.
+    /// </summary>
+    /// <returns>true if the whole buffer was dirty, false otherwise</returns>
+    bool IsWholeBufferDirtyThenReset();
+
+    /// <summary>
+    /// Writes a string to the terminal without tracking dirty cells. This is used by screen refresh operations
+    /// where dirty cell tracking is handled at the screen level, not the terminal level.
+    /// </summary>
+    /// <param name="str">String to write to the terminal</param>
+    void PutStringWithoutDirtyTracking(string str);
+
+    /// <summary>
+    /// Marks the start of a screen refresh operation. During refresh operations, the dirty cell overflow
+    /// protection is disabled to prevent the whole buffer from being marked dirty during large refresh operations.
+    /// </summary>
+    void BeginRefreshOperation();
+
+    /// <summary>
+    /// Marks the end of a screen refresh operation. This re-enables the dirty cell overflow protection.
+    /// </summary>
+    void EndRefreshOperation();
+
+    /// <summary>
     /// Interface used by IBufferWalker to represent a line in the text buffer when iterating over a range of
     /// lines
     /// </summary>

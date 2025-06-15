@@ -38,6 +38,7 @@ public class DefaultVirtualTerminal : AbstractTerminal, IVirtualTerminal
     private TerminalSize _terminalSize;
     private bool _cursorVisible;
     private int _backlogSize;
+    private bool _inRefreshOperation;
 
     private readonly ConcurrentQueue<KeyStroke> _inputQueue;
     private readonly HashSet<SGR> _activeModifiers;
@@ -82,6 +83,7 @@ public class DefaultVirtualTerminal : AbstractTerminal, IVirtualTerminal
         _cursorPosition = TerminalPosition.TopLeftCorner;
         _savedCursorPosition = TerminalPosition.TopLeftCorner;
         _backlogSize = 1000;
+        _inRefreshOperation = false;
     }
 
     #region Terminal interface methods
@@ -211,6 +213,93 @@ public class DefaultVirtualTerminal : AbstractTerminal, IVirtualTerminal
             foreach (char c in str)
             {
                 PutCharacter(c);
+            }
+        }
+    }
+
+    public void PutStringWithoutDirtyTracking(string str)
+    {
+        lock (this)
+        {
+            foreach (char c in str)
+            {
+                PutCharacterWithoutDirtyTracking(c);
+            }
+        }
+    }
+
+    public void BeginRefreshOperation()
+    {
+        lock (this)
+        {
+            _inRefreshOperation = true;
+        }
+    }
+
+    public void EndRefreshOperation()
+    {
+        lock (this)
+        {
+            _inRefreshOperation = false;
+        }
+    }
+
+    private void PutCharacterWithoutDirtyTracking(char c)
+    {
+        if (c == '\n')
+        {
+            MoveCursorToNextLine();
+        }
+        else if (TerminalTextUtils.IsPrintableCharacter(c))
+        {
+            PutCharacterWithoutDirtyTracking(TextCharacter.FromCharacter(c, _activeForegroundColor, _activeBackgroundColor, _activeModifiers.ToArray()));
+        }
+    }
+
+    private void PutCharacterWithoutDirtyTracking(TextCharacter terminalCharacter)
+    {
+        if (terminalCharacter.CharacterString == "\t")
+        {
+            int nrOfSpaces = TabBehaviour.AlignToColumn4.GetTabReplacement(_cursorPosition.Column).Length;
+            for (int i = 0; i < nrOfSpaces && _cursorPosition.Column < _terminalSize.Columns - 1; i++)
+            {
+                PutCharacterWithoutDirtyTracking(terminalCharacter.WithCharacter(' '));
+            }
+        }
+        else
+        {
+            bool doubleWidth = terminalCharacter.IsDoubleWidth;
+            // If we're at the last column and the user tries to print a double-width character, reset the cell and move
+            // to the next line
+            if (_cursorPosition.Column == _terminalSize.Columns - 1 && doubleWidth)
+            {
+                _currentTextBuffer.SetCharacter(_cursorPosition.Row, _cursorPosition.Column, TextCharacter.DefaultCharacter);
+                MoveCursorToNextLine();
+            }
+            if (_cursorPosition.Column == _terminalSize.Columns)
+            {
+                MoveCursorToNextLine();
+            }
+
+            // Update the buffer WITHOUT dirty cell tracking
+            _currentTextBuffer.SetCharacter(_cursorPosition.Row, _cursorPosition.Column, terminalCharacter);
+
+            // Advance cursor
+            _cursorPosition = _cursorPosition.WithRelativeColumn(doubleWidth ? 2 : 1);
+            
+            // BUGFIX: Don't wrap cursor if we're at the very last position of the terminal
+            // This prevents buffer trimming when writing to the bottom-right corner
+            bool isLastPosition = (_cursorPosition.Column == _terminalSize.Columns && 
+                                   _cursorPosition.Row == _terminalSize.Rows - 1);
+            
+            if (_cursorPosition.Column >= _terminalSize.Columns && !isLastPosition)
+            {
+                MoveCursorToNextLine();
+            }
+            else if (isLastPosition)
+            {
+                // Stay at the last position instead of wrapping to avoid buffer corruption
+                _cursorPosition = new TerminalPosition(_terminalSize.Columns - 1, _terminalSize.Rows - 1);
             }
         }
     }
@@ -480,7 +569,8 @@ public class DefaultVirtualTerminal : AbstractTerminal, IVirtualTerminal
                 {
                     _dirtyTerminalCells.Add(new TerminalPosition(_cursorPosition.Column - 1, _cursorPosition.Row));
                 }
-                if (_dirtyTerminalCells.Count > (_terminalSize.Columns * _terminalSize.Rows * 0.9))
+                // Only trigger whole buffer dirty if we're not in a refresh operation
+                if (!_inRefreshOperation && _dirtyTerminalCells.Count > (_terminalSize.Columns * _terminalSize.Rows * 0.9))
                 {
                     SetWholeBufferDirty();
                 }
