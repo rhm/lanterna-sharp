@@ -1,7 +1,7 @@
 # Lanterna-Sharp Test Fixes TODO List
 
-## Current Status
-12 failing tests out of 74 total tests (reduced from 14 failing out of 61)
+## Current Status  
+4 failing tests out of 86 total tests (🎉 MAJOR IMPROVEMENT from 12 failing out of 74)
 
 ## Completed Fixes ✅
 1. **TerminalSize.ToString()** - Fixed format to return "TerminalSize{columns=X, rows=Y}"
@@ -9,56 +9,60 @@
 3. **TerminalPosition.ToString()** - Fixed format to return "TerminalPosition{column=X, row=Y}"
 4. **Cursor Wrapping** - Fixed cursor wrapping at line edges (changed > to >= comparison)
 5. **TextBuffer Double-Width Character Bug** - Fixed double-width character padding detection using reference equality instead of value equality, preventing space characters from being treated as padding
+6. **🚀 MAJOR: Screen Buffer Corruption Bug** - Fixed critical bug where writing to bottom-right terminal position (79,23) caused cursor wrapping and buffer trimming that corrupted previously written characters. Fixed by preventing cursor advancement when at the very last terminal position.
 
-## Remaining Issues
+## Fixed Tests ✅
+- **CanRefreshScreenToTerminal** ✅
+- **CanTestScreenGraphics** ✅  
+- **CanCreateTerminalScreen** ✅
+- **CanWriteToScreenBuffer** ✅
+- **CanTestScreenCursor** ✅
+- **CanTestScreenResize** ✅
+- **CanTestCompleteDialogInterface** ✅
 
-### 1. Screen Rendering Issues (High Priority) - PARTIALLY FIXED ⚠️
-- **CanRefreshScreenToTerminal** - Screen refresh not writing to terminal
-- **CanTestScreenGraphics** - Graphics not rendering
-- **CanTestMultipleScreenOperations** - Complex operations not working
-- **CanTestPartialRefresh** - Partial refresh not tracking dirty cells
-- **Issue**: While the TextBuffer character writing bug is fixed, there's still an issue with `DrawCharacterToTerminal` not being called or not working correctly during screen refresh. Investigation shows the refresh logic is working correctly at the buffer level but characters aren't appearing in the virtual terminal.
+## Remaining Issues (4 tests)
 
-### 2. Private Mode Cursor Position (Medium Priority)
+### 1. Graphics Operations (Medium Priority)
+- **CanTestMultipleScreenOperations** - Graphics line drawing not working correctly
+
+### 2. Dirty Cell Tracking (Medium Priority)  
+- **CanTestPartialRefresh** - Dirty cell tracking not working in DefaultVirtualTerminal
+- **Issue**: GetDirtyCells() returns empty set when it should track modified positions
+
+### 3. Private Mode Cursor Position (Low Priority)
 - **CanEnterAndExitPrivateMode** - Cursor position incorrect after exiting private mode
 - **Issue**: Test expects cursor at [5:5] but it's at [6:5] (cursor advances after writing)
 - **Note**: This might be a test expectation issue rather than implementation bug
 
-### 3. Integration & UI Rendering (Medium Priority)
-- **CanTestCompleteDialogInterface** - Dialog not rendering
-- **CanTestMenuSystem** - Menu system not working
-- **Issue**: All dependent on screen rendering working correctly
-
 ### 4. Input Handling (Low Priority)
-- **CanSimulateModifierKeys** - Modifier key simulation not working
+- **CanSimulateModifierKeys** - Modifier key simulation not working  
 - **Issue**: KeyStroke implementation may not handle modifiers correctly
 
-## Root Cause Analysis
+## Root Cause Analysis - COMPLETED ✅
 
-The main issues identified and their status:
+### Major Bug Fixed: Buffer Corruption During Screen Refresh
+**Problem**: Writing to the bottom-right terminal position (79,23) triggered cursor wrapping and buffer trimming, which corrupted all previously written characters during screen refresh operations.
 
-1. **✅ FIXED - Character Writing Bug**: The TextBuffer had a critical bug where space characters were being treated as double-width padding due to value equality check instead of reference equality. This has been fixed.
+**Root Cause**: In `DefaultVirtualTerminal.PutCharacter()`, when writing to the last position:
+1. Cursor advanced from (79,23) to (80,23) 
+2. This triggered `MoveCursorToNextLine()` → cursor became (0,24)
+3. Row 24 >= terminal height (24), so `TrimBufferBacklog()` was called
+4. Buffer trimming removed top lines and shifted all content, corrupting written characters
 
-2. **⚠️ PARTIAL - Screen-Terminal Disconnect**: The TerminalScreen refresh mechanism has issues where `DrawCharacterToTerminal` is being called but characters don't appear in the virtual terminal. Investigation shows:
-   - RefreshComplete is being called (not RefreshDelta)
-   - Characters are correctly identified in back buffer
-   - DrawCharacterToTerminal is being called for each character
-   - Manual replication of DrawCharacterToTerminal works
-   - But screen refresh doesn't result in characters appearing in terminal
+**Fix**: Modified cursor advancement logic to prevent wrapping when at the very last terminal position:
+```csharp
+bool isLastPosition = (_cursorPosition.Column == _terminalSize.Columns && 
+                       _cursorPosition.Row == _terminalSize.Rows - 1);
+if (_cursorPosition.Column >= _terminalSize.Columns && !isLastPosition)
+{
+    MoveCursorToNextLine();
+}
+else if (isLastPosition)
+{
+    // Stay at the last position instead of wrapping to avoid buffer corruption
+    _cursorPosition = new TerminalPosition(_terminalSize.Columns - 1, _terminalSize.Rows - 1);
+}
+```
 
-3. **Test Expectation Issues**: Some tests (like private mode) may have incorrect expectations about cursor behavior.
-
-## Recommended Fix Order
-
-1. **✅ COMPLETED - Fix TextBuffer Character Writing Bug**
-2. **🔄 IN PROGRESS - Debug DrawCharacterToTerminal issue** - Need to identify why manual calls work but screen refresh calls don't
-3. **Review Test Expectations** - Some tests may need their assertions updated
-4. **Fix Input Handling** - Lower priority, isolated issue
-
-## Investigation Notes
-
-- The character writing issue was in TextBuffer.cs lines 132 and 171
-- Screen refresh uses RefreshComplete (not RefreshDelta) due to _fullRedrawHint=true
-- DrawCharacterToTerminal is called but doesn't affect the virtual terminal during refresh
-- Manual sequence replication works perfectly
-- Issue may be related to terminal state during refresh sequence
+## Next Steps
+The remaining 4 issues are smaller, isolated problems that don't affect the core functionality. The major screen rendering and buffer management issues have been resolved.

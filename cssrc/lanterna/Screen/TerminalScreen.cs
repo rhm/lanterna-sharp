@@ -20,6 +20,7 @@
 using Lanterna.Core;
 using Lanterna.Input;
 using Lanterna.Terminal;
+using Lanterna.Terminal.Virtual;
 
 namespace Lanterna.Screen;
 

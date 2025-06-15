@@ -488,9 +488,20 @@ public class DefaultVirtualTerminal : AbstractTerminal, IVirtualTerminal
 
             // Advance cursor
             _cursorPosition = _cursorPosition.WithRelativeColumn(doubleWidth ? 2 : 1);
-            if (_cursorPosition.Column >= _terminalSize.Columns)
+            
+            // BUGFIX: Don't wrap cursor if we're at the very last position of the terminal
+            // This prevents buffer trimming when writing to the bottom-right corner
+            bool isLastPosition = (_cursorPosition.Column == _terminalSize.Columns && 
+                                   _cursorPosition.Row == _terminalSize.Rows - 1);
+            
+            if (_cursorPosition.Column >= _terminalSize.Columns && !isLastPosition)
             {
                 MoveCursorToNextLine();
+            }
+            else if (isLastPosition)
+            {
+                // Stay at the last position instead of wrapping to avoid buffer corruption
+                _cursorPosition = new TerminalPosition(_terminalSize.Columns - 1, _terminalSize.Rows - 1);
             }
         }
     }
@@ -505,7 +516,13 @@ public class DefaultVirtualTerminal : AbstractTerminal, IVirtualTerminal
         {
             _currentTextBuffer.NewLine();
         }
-        TrimBufferBacklog();
+        
+        // BUGFIX: Only trim buffer backlog if we're actually going beyond the terminal height
+        // During screen refresh operations, we should not trim when cursor is still within terminal bounds
+        if (_cursorPosition.Row >= _terminalSize.Rows)
+        {
+            TrimBufferBacklog();
+        }
         CorrectCursor();
     }
 
