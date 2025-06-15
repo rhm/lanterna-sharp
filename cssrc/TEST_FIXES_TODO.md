@@ -1,7 +1,7 @@
 # Lanterna-Sharp Test Fixes TODO List
 
 ## Current Status  
-3 failing tests out of 80 total tests (🎉 MAJOR IMPROVEMENT - down from 4 failing!)
+2 failing tests out of 80 total tests (🎉 MASSIVE IMPROVEMENT - down from 4 failing!)
 
 ## Completed Fixes ✅
 1. **TerminalSize.ToString()** - Fixed format to return "TerminalSize{columns=X, rows=Y}"
@@ -11,6 +11,7 @@
 5. **TextBuffer Double-Width Character Bug** - Fixed double-width character padding detection using reference equality instead of value equality, preventing space characters from being treated as padding
 6. **🚀 MAJOR: Screen Buffer Corruption Bug** - Fixed critical bug where writing to bottom-right terminal position (79,23) caused cursor wrapping and buffer trimming that corrupted previously written characters. Fixed by preventing cursor advancement when at the very last terminal position.
 7. **🎯 Dirty Cell Tracking for Partial Refresh** - Fixed dirty cell tracking system by properly resetting the _wholeBufferDirty flag during screen refresh and preventing dirty cell overflow during refresh operations. Screen refresh now correctly tracks which cells were written to the terminal.
+8. **🚀 Graphics Operations (DrawLine)** - Fixed line drawing in screen graphics by implementing proper Bresenham's algorithm in AbstractTextGraphics. Previously DrawLine was a stub that returned without drawing anything.
 
 ## Fixed Tests ✅
 - **CanRefreshScreenToTerminal** ✅
@@ -21,18 +22,15 @@
 - **CanTestScreenResize** ✅
 - **CanTestCompleteDialogInterface** ✅
 - **CanTestPartialRefresh** ✅
+- **CanTestMultipleScreenOperations** ✅
 
-## Remaining Issues (3 tests)
+## Remaining Issues (2 tests)
 
-### 1. Graphics Operations (Medium Priority)
-- **CanTestMultipleScreenOperations** - Graphics line drawing not working correctly
-
-### 2. Private Mode Cursor Position (Low Priority)
 - **CanEnterAndExitPrivateMode** - Cursor position incorrect after exiting private mode
 - **Issue**: Test expects cursor at [5:5] but it's at [6:5] (cursor advances after writing)
 - **Note**: This might be a test expectation issue rather than implementation bug
 
-### 3. Input Handling (Low Priority)
+### 2. Input Handling (Low Priority)
 - **CanSimulateModifierKeys** - Modifier key simulation not working  
 - **Issue**: KeyStroke implementation may not handle modifiers correctly
 
@@ -63,4 +61,4 @@ else if (isLastPosition)
 ```
 
 ## Next Steps
-The remaining 4 issues are smaller, isolated problems that don't affect the core functionality. The major screen rendering and buffer management issues have been resolved.
+The remaining 2 issues are smaller, isolated problems that don't affect the core functionality. The major screen rendering, buffer management, and graphics operations have been resolved.

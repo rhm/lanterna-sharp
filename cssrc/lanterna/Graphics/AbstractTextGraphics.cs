@@ -203,10 +203,38 @@ public abstract class AbstractTextGraphics : ITextGraphics
         return this;
     }
 
-    // Stub implementations for more advanced features
     public virtual ITextGraphics DrawLine(TerminalPosition fromPoint, TerminalPosition toPoint, char character)
     {
-        // Basic line drawing - can be improved
+        // Bresenham's line algorithm implementation
+        int dx = Math.Abs(toPoint.Column - fromPoint.Column);
+        int dy = Math.Abs(toPoint.Row - fromPoint.Row);
+        int sx = fromPoint.Column < toPoint.Column ? 1 : -1;
+        int sy = fromPoint.Row < toPoint.Row ? 1 : -1;
+        int err = dx - dy;
+
+        int currentColumn = fromPoint.Column;
+        int currentRow = fromPoint.Row;
+
+        while (true)
+        {
+            SetCharacter(currentColumn, currentRow, character);
+
+            if (currentColumn == toPoint.Column && currentRow == toPoint.Row)
+                break;
+
+            int e2 = 2 * err;
+            if (e2 > -dy)
+            {
+                err -= dy;
+                currentColumn += sx;
+            }
+            if (e2 < dx)
+            {
+                err += dx;
+                currentRow += sy;
+            }
+        }
+        
         return this;
     }
 
