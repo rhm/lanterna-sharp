@@ -5,8 +5,8 @@ This document tracks the comprehensive list of Java classes that need to be port
 ## Summary Statistics
 
 - **Total Java Classes**: 185 (corrected - DelegatingTextImage doesn't exist)
-- **Already Ported**: 152 (82.2%)
-- **Remaining to Port**: 33 (17.8%)
+- **Already Ported**: 165 (89.2%)
+- **Remaining to Port**: 20 (10.8%)
 
 ## Priority Levels
 - **HIGH**: Core functionality required for basic operation
@@ -126,7 +126,7 @@ This document tracks the comprehensive list of Java classes that need to be port
 
 ---
 
-## LOW PRIORITY CLASSES (23 Missing)
+## LOW PRIORITY CLASSES (20 Missing)
 
 ### Swing/AWT Support (Desktop GUI)
 - [ ] `terminal/swing/AWTTerminalFontConfiguration.java`
@@ -159,9 +159,9 @@ This document tracks the comprehensive list of Java classes that need to be port
 - [x] `graphics/BasicTextImage.java` - COMPLETED (already fully ported)
 
 ### Platform Detection
-- [ ] `terminal/DetachedTerminal.java`
-- [ ] `terminal/TerminalResizeListener.java`
-- [ ] `terminal/ansi/ANSIArgumentType.java`
+- [x] `terminal/DetachedTerminal.java` - DOESN'T EXIST IN JAVA CODEBASE
+- [x] `terminal/TerminalResizeListener.java` - ALREADY FULLY PORTED (ITerminalResizeListener.cs + SimpleTerminalResizeListener.cs)
+- [x] `terminal/ansi/ANSIArgumentType.java` - DOESN'T EXIST IN JAVA CODEBASE
 
 ---
 
