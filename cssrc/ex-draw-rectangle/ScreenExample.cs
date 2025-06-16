@@ -95,41 +95,10 @@ public static class ScreenExample
                 cleanupCompleted = true;
             }
             
-            // Force terminal reset as a last resort if cleanup might have failed
-            try
+            // If terminal is still not responding properly after cleanup,
+            // the user can run the reset script manually
+            if (!cleanupCompleted)
             {
-                // First try to clear any pending input that might interfere with the shell
-                var clearInputProcess = System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
-                {
-                    FileName = "/bin/bash",
-                    Arguments = "-c \"read -t 0.1 -n 10000 discard 2>/dev/null || true\"",
-                    UseShellExecute = false,
-                    CreateNoWindow = true
-                });
-                clearInputProcess?.WaitForExit(500);
-                
-                // Run reset command to ensure terminal is restored
-                var resetProcess = System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
-                {
-                    FileName = "reset",
-                    UseShellExecute = false,
-                    CreateNoWindow = true
-                });
-                resetProcess?.WaitForExit(1000); // Wait max 1 second
-                
-                // Clear input again after reset
-                var clearInputProcess2 = System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
-                {
-                    FileName = "/bin/bash",
-                    Arguments = "-c \"read -t 0.1 -n 10000 discard 2>/dev/null || true\"",
-                    UseShellExecute = false,
-                    CreateNoWindow = true
-                });
-                clearInputProcess2?.WaitForExit(500);
-            }
-            catch
-            {
-                // Final fallback: print instructions to user
                 Console.WriteLine("\nIf your terminal is not responding properly, try running: ./reset-terminal.sh");
             }
         }

@@ -54,6 +54,8 @@ public class UnixTerminal : ANSITerminal
     private bool _terminalAcquired;
     private bool _inPrivateMode;
     private readonly object _terminalLock = new();
+    private volatile bool _stopSizeMonitoring;
+    private Task? _sizeMonitoringTask;
 
     /// <summary>
     /// Creates a UnixTerminal with default settings, using Console.In and Console.Out for input/output
@@ -160,6 +162,7 @@ public class UnixTerminal : ANSITerminal
     /// </summary>
     private void RestoreTerminalSettings()
     {
+        // First try to restore saved settings
         if (!string.IsNullOrEmpty(_savedTerminalSettings))
         {
             try
@@ -168,8 +171,38 @@ public class UnixTerminal : ANSITerminal
             }
             catch
             {
-                // Ignore errors during restore - we're probably shutting down
+                // If restore from saved settings fails, manually restore critical settings
+                try
+                {
+                    RunSttyCommand("echo", "icanon", "icrnl", "onlcr");
+                }
+                catch
+                {
+                    // Ignore errors - we tried our best
+                }
             }
+        }
+        else
+        {
+            // No saved settings - manually restore critical settings
+            try
+            {
+                RunSttyCommand("echo", "icanon", "icrnl", "onlcr");
+            }
+            catch
+            {
+                // Ignore errors - we tried our best
+            }
+        }
+        
+        // Always try to explicitly enable echo as a final step
+        try
+        {
+            RunSttyCommand("echo");
+        }
+        catch
+        {
+            // Ignore
         }
     }
 
@@ -276,10 +309,11 @@ public class UnixTerminal : ANSITerminal
             RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {
             // Start a background thread to periodically check terminal size
-            Task.Run(async () =>
+            _stopSizeMonitoring = false;
+            _sizeMonitoringTask = Task.Run(async () =>
             {
                 var lastSize = new TerminalSize(80, 24);
-                while (_terminalAcquired && !_disposed)
+                while (!_stopSizeMonitoring && _terminalAcquired && !_disposed)
                 {
                     try
                     {
@@ -307,56 +341,70 @@ public class UnixTerminal : ANSITerminal
     private TerminalSize QueryTerminalSize()
     {
         // If we're disposed or not acquired, don't query - just return default
-        if (_disposed || !_terminalAcquired)
+        if (_disposed || !_terminalAcquired || _stopSizeMonitoring)
         {
             return new TerminalSize(80, 24);
         }
         
-        try
+        lock (_terminalLock)
         {
-            // Try to get size from environment variables first (safer)
-            string? cols = Environment.GetEnvironmentVariable("COLUMNS");
-            string? rows = Environment.GetEnvironmentVariable("LINES");
-            
-            if (int.TryParse(cols, out int envCols) && int.TryParse(rows, out int envRows) &&
-                envCols > 0 && envRows > 0)
+            // Double-check after acquiring lock
+            if (_disposed || !_terminalAcquired || _stopSizeMonitoring)
             {
-                return new TerminalSize(envCols, envRows);
+                return new TerminalSize(80, 24);
             }
             
-            // Fallback to querying via cursor position (this generates the problematic responses)
-            // But don't do this during cleanup
-            if (!_disposed)
+            try
             {
-                // Save cursor position
-                WriteCSISequenceToTerminal(TerminalEncoding.GetBytes("s"));
+                // Try to get size from environment variables first (safer)
+                string? cols = Environment.GetEnvironmentVariable("COLUMNS");
+                string? rows = Environment.GetEnvironmentVariable("LINES");
                 
-                // Move cursor to a very large position
-                SetCursorPosition(5000, 5000);
+                if (int.TryParse(cols, out int envCols) && int.TryParse(rows, out int envRows) &&
+                    envCols > 0 && envRows > 0)
+                {
+                    return new TerminalSize(envCols, envRows);
+                }
                 
-                // Request cursor position report
-                WriteCSISequenceToTerminal(TerminalEncoding.GetBytes("6n"));
-                Flush();
+                // Try using tput commands as a safer alternative
+                try
+                {
+                    string colsOutput = ExecuteCommand(new[] { "tput", "cols" }).Trim();
+                    string rowsOutput = ExecuteCommand(new[] { "tput", "lines" }).Trim();
+                    
+                    if (int.TryParse(colsOutput, out int tputCols) && int.TryParse(rowsOutput, out int tputRows) &&
+                        tputCols > 0 && tputRows > 0)
+                    {
+                        return new TerminalSize(tputCols, tputRows);
+                    }
+                }
+                catch
+                {
+                    // tput not available, continue with default
+                }
                 
-                // Restore cursor position
-                WriteCSISequenceToTerminal(TerminalEncoding.GetBytes("u"));
-                
-                // For now, return a default size
-                // A full implementation would parse the cursor position report response: ESC[row;colR
-                // This requires implementing proper ANSI sequence parsing in the input handling
+                // Avoid cursor position queries entirely - they cause too many issues
+                // Return a reasonable default instead
+                return new TerminalSize(80, 24);
             }
-            
-            return new TerminalSize(80, 24);
-        }
-        catch
-        {
-            return new TerminalSize(80, 24);
+            catch
+            {
+                return new TerminalSize(80, 24);
+            }
         }
     }
 
     public override TerminalSize GetTerminalSize()
     {
         return QueryTerminalSize();
+    }
+
+    public override TerminalPosition GetCursorPosition()
+    {
+        // IMPORTANT: Do NOT send cursor position queries (ESC[6n) as they generate
+        // response sequences that can remain in the input buffer and cause echo issues.
+        // Return a default position instead of querying the actual position.
+        return new TerminalPosition(0, 0);
     }
 
     public override void EnterPrivateMode()
@@ -450,26 +498,68 @@ public class UnixTerminal : ANSITerminal
 
             try
             {
-                // First, drain any pending input to prevent it from being interpreted by the shell
+                // CRITICAL: Stop size monitoring FIRST to prevent any new escape sequences
+                _stopSizeMonitoring = true;
+                
+                // Wait for size monitoring to stop (with timeout)
+                try
+                {
+                    _sizeMonitoringTask?.Wait(2000); // Increased timeout
+                }
+                catch
+                {
+                    // Ignore timeout or other errors
+                }
+                
+                // Small delay to ensure thread has stopped
+                Thread.Sleep(100);
+                
+                // First, aggressively drain any pending input
+                DrainPendingInput();
+                Thread.Sleep(50);
                 DrainPendingInput();
                 
                 // Reset colors and SGR first
                 ResetColorAndSGR();
+                Flush();
+                Thread.Sleep(50);
                 
                 // Exit private mode if we're in it
                 if (_inPrivateMode)
                 {
                     ExitPrivateMode();
+                    Flush();
+                    Thread.Sleep(50);
                 }
 
                 // Make sure cursor is visible
                 SetCursorVisible(true);
+                Flush();
                 
                 // Clear any remaining input after mode changes
+                Thread.Sleep(100); // Give time for any escape sequence responses
                 DrainPendingInput();
                 
                 // Restore terminal settings (this should restore echo and canonical mode)
                 RestoreTerminalSettings();
+                
+                // Explicitly ensure echo is enabled (belt and suspenders approach)
+                try
+                {
+                    SetKeyEcho(true);
+                }
+                catch
+                {
+                    // If SetKeyEcho fails, try direct stty command
+                    try
+                    {
+                        ExecuteCommand(new[] { "/bin/bash", "-c", "stty echo 2>/dev/null || true" });
+                    }
+                    catch
+                    {
+                        // Ignore
+                    }
+                }
                 
                 // Re-enable key stroke signals
                 if (_catchSpecialCharacters)
@@ -477,10 +567,25 @@ public class UnixTerminal : ANSITerminal
                     SetKeyStrokeSignalsEnabled(true);
                 }
 
-                // Final drain after restoring settings
+                // More aggressive final cleanup
+                Thread.Sleep(100);
+                DrainPendingInput();
+                
+                // Clear the line to ensure no escape sequences remain
+                try
+                {
+                    ExecuteCommand(new[] { "/bin/bash", "-c", "printf '\033[2K\r' > /dev/tty" });
+                }
+                catch
+                {
+                    // Ignore if this fails
+                }
+                
+                // Final drain
+                Thread.Sleep(50);
                 DrainPendingInput();
 
-                // Force a flush to make sure all commands are sent
+                // Force a final flush
                 Flush();
 
                 _terminalAcquired = false;
@@ -508,29 +613,84 @@ public class UnixTerminal : ANSITerminal
     {
         try
         {
-            // Use stty to flush input buffer - this is more reliable than trying to read it ourselves
-            RunSttyCommand("-F", "/dev/stdin", "flush");
-        }
-        catch
-        {
+            // Multiple approaches to ensure input is fully drained
+            
+            // First, try to read any pending data from our input stream
+            if (TerminalInput is FileStream fs && fs.CanRead)
+            {
+                // Try to read available data non-blocking
+                int attempts = 0;
+                while (fs.CanRead && attempts < 100) // Limit attempts
+                {
+                    try
+                    {
+                        // Use PollInput to read any available keystrokes
+                        var keystroke = PollInput();
+                        if (keystroke == null)
+                            break;
+                        attempts++;
+                    }
+                    catch
+                    {
+                        break;
+                    }
+                }
+            }
+            
+            // Use multiple shell commands to clear input - more aggressive
             try
             {
-                // Fallback: try without the -F flag
+                // Clear using multiple read attempts
+                ExecuteCommand(new[] { "/bin/bash", "-c", "for i in {1..5}; do read -t 0.001 -n 10000 discard < /dev/tty 2>/dev/null || true; done" });
+            }
+            catch
+            {
+                // Ignore
+            }
+            
+            try
+            {
+                // Try to consume all input until none available
+                ExecuteCommand(new[] { "/bin/bash", "-c", "while read -t 0 -n 1; do :; done < /dev/tty 2>/dev/null || true" });
+            }
+            catch
+            {
+                // Ignore
+            }
+            
+            try
+            {
+                // Try stty flush (may not be supported everywhere)
                 RunSttyCommand("flush");
             }
             catch
             {
-                // If stty flush doesn't work, try a different approach
-                try
-                {
-                    // Use tcflush via a shell command
-                    ExecuteCommand(new[] { "/bin/bash", "-c", "exec < /dev/tty && read -t 0.01 -n 1000 || true" });
-                }
-                catch
-                {
-                    // Final fallback: ignore - we tried our best
-                }
+                // Ignore if not supported
             }
+            
+            // Use tcflush if available (more direct approach)
+            try
+            {
+                ExecuteCommand(new[] { "/bin/bash", "-c", "python3 -c 'import termios,sys; termios.tcflush(sys.stdin.fileno(), termios.TCIFLUSH)' 2>/dev/null || true" });
+            }
+            catch
+            {
+                // Ignore if python not available
+            }
+            
+            // Final attempt: use dd to read and discard
+            try
+            {
+                ExecuteCommand(new[] { "/bin/bash", "-c", "dd if=/dev/tty of=/dev/null bs=1 count=10000 iflag=nonblock 2>/dev/null || true" });
+            }
+            catch
+            {
+                // Ignore
+            }
+        }
+        catch
+        {
+            // If all else fails, just continue
         }
     }
 
@@ -539,6 +699,8 @@ public class UnixTerminal : ANSITerminal
     /// </summary>
     private void ForceTerminalReset()
     {
+        // Try multiple approaches to ensure echo is restored
+        
         try
         {
             // First try to clear input buffer using stty
@@ -549,6 +711,34 @@ public class UnixTerminal : ANSITerminal
             // Ignore if flush not supported
         }
         
+        // Always try to explicitly restore echo first
+        try
+        {
+            RunSttyCommand("echo");
+        }
+        catch
+        {
+            // Continue trying other methods
+        }
+        
+        try
+        {
+            // Try stty sane which should restore all settings to reasonable defaults
+            RunSttyCommand("sane");
+        }
+        catch
+        {
+            // If sane fails, manually restore critical settings
+            try
+            {
+                RunSttyCommand("echo", "icanon", "icrnl", "onlcr", "intr", "^C");
+            }
+            catch
+            {
+                // Continue with other attempts
+            }
+        }
+        
         try
         {
             // Try to run reset command to restore terminal to sane state
@@ -556,23 +746,25 @@ public class UnixTerminal : ANSITerminal
         }
         catch
         {
+            // Last resort - try tput reset
             try
             {
-                // Fallback: try stty sane
-                RunSttyCommand("sane");
+                ExecuteCommand(new[] { "tput", "reset" });
             }
             catch
             {
-                // Final fallback: manually restore common settings
-                try
-                {
-                    RunSttyCommand("echo", "icanon", "intr", "^C");
-                }
-                catch
-                {
-                    // Give up - can't restore terminal
-                }
+                // Give up - can't restore terminal
             }
+        }
+        
+        // Final attempt - use bash to set echo
+        try
+        {
+            ExecuteCommand(new[] { "/bin/bash", "-c", "stty echo 2>/dev/null || true" });
+        }
+        catch
+        {
+            // Ignore - we tried everything
         }
     }
 
@@ -584,15 +776,48 @@ public class UnixTerminal : ANSITerminal
         {
             if (disposing)
             {
+                // Stop monitoring FIRST
+                _stopSizeMonitoring = true;
+                
                 // Unregister event handlers
                 AppDomain.CurrentDomain.ProcessExit -= OnProcessExit;
                 Console.CancelKeyPress -= OnCancelKeyPress;
                 
                 // Restore terminal
                 RestoreTerminal();
+                
+                // One final aggressive cleanup attempt
+                try
+                {
+                    // Try to clear any remaining garbage and ensure echo is on
+                    ExecuteCommand(new[] { "/bin/bash", "-c", 
+                        "stty echo icanon 2>/dev/null; " +
+                        "while read -t 0 -n 1; do :; done < /dev/tty 2>/dev/null || true" });
+                }
+                catch
+                {
+                    // Ignore errors
+                }
+            }
+            else
+            {
+                // Finalizer path - still try to restore echo
+                try
+                {
+                    ExecuteCommand(new[] { "/bin/bash", "-c", "stty echo 2>/dev/null || true" });
+                }
+                catch
+                {
+                    // Ignore
+                }
             }
             _disposed = true;
         }
         base.Dispose(disposing);
+    }
+    
+    ~UnixTerminal()
+    {
+        Dispose(false);
     }
 }

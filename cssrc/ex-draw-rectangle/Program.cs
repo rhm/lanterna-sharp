@@ -31,6 +31,20 @@ public static class Program
             ScreenExample.RunScreenDemo();
             return;
         }
+        
+        // Check if user wants to run the cleanup test
+        if (args.Length > 0 && args[0] == "--test-cleanup")
+        {
+            TestTerminalCleanup.RunCleanupTest();
+            return;
+        }
+        
+        // Check if user wants to run the debug terminal demo
+        if (args.Length > 0 && args[0] == "--debug-terminal")
+        {
+            DebugTerminalExample.RunDebugDemo();
+            return;
+        }
 
         // Demonstrate TerminalPosition
         Console.WriteLine("1. TerminalPosition Examples:");
@@ -136,10 +150,19 @@ public static class Program
         Console.WriteLine("The Lanterna C# port core is ready for terminal implementation.");
         Console.WriteLine();
         Console.WriteLine("To try the interactive demos, run:");
-        Console.WriteLine("  dotnet run --terminal   (basic terminal layer demo)");
-        Console.WriteLine("  dotnet run --screen     (advanced screen layer demo)");
+        Console.WriteLine("  dotnet run --terminal        (basic terminal layer demo)");
+        Console.WriteLine("  dotnet run --screen          (advanced screen layer demo)");
+        Console.WriteLine("  dotnet run --test-cleanup    (test terminal cleanup)");
+        Console.WriteLine("  dotnet run --debug-terminal  (debug terminal echo issues)");
         Console.WriteLine();
-        Console.WriteLine("Note: If your terminal stops responding after a demo,");
-        Console.WriteLine("run: ./reset-terminal.sh or type 'reset' and press Enter");
+        Console.WriteLine("IMPORTANT: Terminal Cleanup");
+        Console.WriteLine("---------------------------");
+        Console.WriteLine("If your terminal stops echoing characters after running a demo:");
+        Console.WriteLine("1. Run: ./reset-terminal.sh");
+        Console.WriteLine("2. Or type 'reset' and press Enter (even if you can't see it)");
+        Console.WriteLine("3. For diagnostics, run: ./diagnose-terminal.sh");
+        Console.WriteLine();
+        Console.WriteLine("This is a known issue with VT100 terminals when programs don't");
+        Console.WriteLine("properly clear escape sequence responses from the input buffer.");
     }
 }

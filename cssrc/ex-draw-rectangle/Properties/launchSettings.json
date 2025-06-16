@@ -1,0 +1,11 @@
+// filepath: YourProject/Properties/launchSettings.json
+{
+  "profiles": {
+    "ex-draw-rectangle": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "environmentVariables": {},
+      "commandLineArgs": "--screen"
+    }
+  }
+}

@@ -257,7 +257,13 @@ public static class TerminalExample
         terminal.SetCursorPosition((size.Columns - pressKey.Length) / 2, size.Rows / 2 + 2);
         terminal.PutString(pressKey);
         
+        terminal.SetCursorVisible(true);
         terminal.Flush();
+        
+        // Wait for user to press a key before exiting
         terminal.ReadInput();
+        
+        // Add a small delay to ensure the message is visible
+        Thread.Sleep(100);
     }
 }
