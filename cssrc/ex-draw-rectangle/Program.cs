@@ -31,14 +31,7 @@ public static class Program
             ScreenExample.RunScreenDemo();
             return;
         }
-        
-        // Check if user wants to run the cleanup test
-        if (args.Length > 0 && args[0] == "--test-cleanup")
-        {
-            TestTerminalCleanup.RunCleanupTest();
-            return;
-        }
-        
+              
         // Check if user wants to run the debug terminal demo
         if (args.Length > 0 && args[0] == "--debug-terminal")
         {
